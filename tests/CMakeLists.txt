@@ -25,3 +25,4 @@ macro(add_spam_test basename)
 endmacro()
 
 add_spam_test(fl_test)
+add_spam_test(matrix_test)
