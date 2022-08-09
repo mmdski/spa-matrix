@@ -15,9 +15,11 @@ message(STATUS "CXX Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
 
 # add debug and ASAN flags for ASAN build
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Asan")
+    set(NO_LEAK_PATH "${CMAKE_SOURCE_DIR}/tests/san-check/no-leak.c")
+
     # determine if ASan is available
     try_compile(ASAN_AVAILABLE "${CMAKE_BINARY_DIR}"
-        SOURCES "${CMAKE_SOURCE_DIR}/san-check/no-leak.c"
+        SOURCES "${NO_LEAK_PATH}"
         CMAKE_FLAGS "-fsanitize=address"
         LINK_OPTIONS "-fsanitize=address"
         COPY_FILE "${CMAKE_BINARY_DIR}/lsan-check/no-leak")
@@ -27,9 +29,10 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Asan")
     set(LSAN_AVAILABLE FALSE)
 
     if(ASAN_AVAILABLE)
-        file(COPY_FILE "${CMAKE_SOURCE_DIR}/san-check/lsan-check.sh" "${CMAKE_BINARY_DIR}/lsan-check/lsan-check.sh")
-        set(ENV{SOURCE_DIR} ${CMAKE_SOURCE_DIR})
-
+        file(COPY_FILE "${CMAKE_SOURCE_DIR}/tests/san-check/lsan-check.sh"
+            "${CMAKE_BINARY_DIR}/lsan-check/lsan-check.sh")
+        file(COPY_FILE "${CMAKE_SOURCE_DIR}/tests/lsan.supp"
+            "${CMAKE_BINARY_DIR}/lsan-check/lsan.supp")
         execute_process(COMMAND
             "${CMAKE_BINARY_DIR}/lsan-check/lsan-check.sh"
             WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/lsan-check"
@@ -45,7 +48,7 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Asan")
 
     # determine if UBSan is available
     try_compile(UBSAN_AVAILABLE "${CMAKE_BINARY_DIR}"
-        SOURCES "${CMAKE_SOURCE_DIR}/san-check/no-leak.c"
+        SOURCES "${NO_LEAK_PATH}"
         CMAKE_FLAGS "-fsanitize=undefined"
         LINK_OPTIONS "-fsanitize=undefined")
     message(STATUS "UBSan available: ${UBSAN_AVAILABLE}")

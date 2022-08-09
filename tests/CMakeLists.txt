@@ -6,7 +6,8 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Asan")
   set(TEST_ENV "ASAN_OPTIONS=abort_on_error=0")
 
   if(LSAN_AVAILABLE)
-    string(CONCAT TEST_ENV "${TEST_ENV}" ":detect_leaks=1;LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/lsan.supp")
+    string(CONCAT TEST_ENV "${TEST_ENV}"
+      ":detect_leaks=1;LSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/lsan.supp")
   endif()
 
   if(UBSAN_AVAILABLE)
