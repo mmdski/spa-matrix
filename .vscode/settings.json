@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "*.h": "c",
+    },
+    "C_Cpp.errorSquiggles": "Enabled",
+    "C_Cpp.codeAnalysis.exclude": {
+        "build/_deps/googletest-*/": true
+    },
+    "editor.tabSize": 2,
+    "cmake.generator": "Ninja",
+    "cmake.launchBehavior": "reuseTerminal",
+    "cmake.revealLog": "never",
+    "cmake.configureSettings": {
+        "TESTS": "1"
+    }
+}
