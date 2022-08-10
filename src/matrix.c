@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <errno.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -122,6 +123,34 @@ spam_mat_new_eye(SPAMatrix *m_ptr, size_t n) {
   return SPAM_NO_ERROR;
 }
 
+// column concatenate
+int
+spam_mat_new_colcat(SPAMatrix *m_ptr, SPAMatrix a, SPAMatrix b) {
+
+  assert(m_ptr);
+  assert(a && b);
+  assert(a->n_rows == b->n_rows);
+
+  size_t total_columns = a->n_cols + b->n_cols;
+
+  int new_status = spam_mat_new(m_ptr, a->n_rows, total_columns);
+  if (new_status == SPAM_MEM_ERROR)
+    return new_status;
+
+  for (size_t i = 1; i <= a->n_rows; ++i) {
+
+    for (size_t j = 1; j <= a->n_cols; ++j)
+      (*m_ptr)->elements[MAT_INDEX(total_columns, i, j)] =
+          spam_mat_get(a, i, j);
+
+    for (size_t j = 1; j <= b->n_cols; ++j)
+      (*m_ptr)->elements[MAT_INDEX(total_columns, i, j + a->n_cols)] =
+          spam_mat_get(b, i, j);
+  }
+
+  return SPAM_NO_ERROR;
+}
+
 void
 spam_mat_free(SPAMatrix *m_ptr) {
 
@@ -174,4 +203,130 @@ spam_mat_print(SPAMatrix a) {
     }
     printf("\n");
   }
+}
+
+double
+spam_mat_get(SPAMatrix a, size_t i, size_t j) {
+
+  assert(a);
+  assert(1 <= i && i <= a->n_rows);
+  assert(1 <= j && j <= a->n_cols);
+
+  return a->elements[MAT_INDEX(a->n_cols, i, j)];
+}
+
+void
+spam_mat_set(SPAMatrix a, size_t i, size_t j, double value) {
+
+  assert(a);
+  assert(1 <= i && i <= a->n_rows);
+  assert(1 <= j && j <= a->n_cols);
+
+  a->elements[MAT_INDEX(a->n_cols, i, j)] = value;
+}
+
+double *
+spam_mat_el(SPAMatrix a, size_t i, size_t j) {
+
+  assert(a);
+  assert(1 <= i && i <= a->n_rows);
+  assert(1 <= j && j <= a->n_cols);
+
+  return &a->elements[MAT_INDEX(a->n_cols, i, j)];
+}
+
+// a[i1,*] += c*a[i2,*]
+void
+spam_mat_row_add(SPAMatrix a, size_t i1, size_t i2, double c) {
+
+  assert(a);
+  assert(1 <= i1 && i1 <= a->n_rows);
+  assert(1 <= i2 && i2 <= a->n_rows);
+
+  double sum, prod;
+
+  for (size_t j = 1; j <= a->n_cols; ++j) {
+    prod = spam_fl(c * a->elements[MAT_INDEX(a->n_cols, i2, j)]);
+    sum  = spam_fl(a->elements[MAT_INDEX(a->n_cols, i1, j)] + prod);
+    a->elements[MAT_INDEX(a->n_cols, i1, j)] = sum;
+  }
+}
+
+// a[i1,*] *= c*a[i1,*]
+void
+spam_mat_row_mult(SPAMatrix a, size_t i, double c) {
+
+  assert(a);
+  assert(1 <= i && i <= a->n_rows);
+
+  for (size_t j = 1; j <= a->n_cols; ++j) {
+    a->elements[MAT_INDEX(a->n_cols, i, j)] =
+        spam_fl(c * a->elements[MAT_INDEX(a->n_cols, i, j)]);
+  }
+}
+
+// a[i1,*] <=> c*a[i2,*]
+void
+spam_mat_row_exch(SPAMatrix a, size_t i1, size_t i2) {
+
+  assert(a);
+  assert(1 <= i1 && i1 <= a->n_rows);
+  assert(1 <= i2 && i2 <= a->n_rows);
+
+  if (i1 == i2)
+    return;
+
+  double tmp;
+
+  for (size_t j = 1; j <= a->n_cols; ++j) {
+    tmp = a->elements[MAT_INDEX(a->n_cols, i1, j)];
+    a->elements[MAT_INDEX(a->n_cols, i1, j)] =
+        a->elements[MAT_INDEX(a->n_cols, i2, j)];
+    a->elements[MAT_INDEX(a->n_cols, i2, j)] = tmp;
+  }
+}
+
+void
+spam_mat_pivot_no_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
+  (void) a;
+  (void) pivot_row;
+  (void) pivot_col;
+}
+
+void
+spam_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
+
+  assert(a);
+  assert(1 <= pivot_row && pivot_row <= a->n_rows);
+  assert(1 <= pivot_col && pivot_col <= a->n_cols);
+
+  size_t i;
+  for (i = pivot_row; i <= a->n_rows; ++i) {
+    if (a->elements[MAT_INDEX(a->n_cols, i, pivot_col)] == 0)
+      break;
+  }
+
+  if (i <= a->n_rows)
+    spam_mat_row_exch(a, i, pivot_row);
+}
+
+void
+spam_mat_pivot_max_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
+
+  assert(a);
+  assert(1 <= pivot_row && pivot_row <= a->n_rows);
+  assert(1 <= pivot_col && pivot_col <= a->n_cols);
+
+  size_t max_row       = pivot_row;
+  double abs_max_value = fabs(spam_mat_get(a, pivot_row, pivot_col));
+  double abs_value;
+  for (size_t i = pivot_row + 1; i <= a->n_rows; ++i) {
+    abs_value = fabs(spam_mat_get(a, i, pivot_col));
+    if (abs_value > abs_max_value) {
+      abs_max_value = abs_value;
+      max_row       = i;
+    }
+  }
+
+  spam_mat_row_exch(a, pivot_row, max_row);
 }

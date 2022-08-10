@@ -7,7 +7,7 @@
 #define MAT_INDEX(n_cols, row, col) ((row - 1) * n_cols + (col - 1))
 
 // spam error numbers
-typedef enum { SPAM_NO_ERROR = 0, SPAM_MEM_ERROR } SPAM_ERROR_NUM;
+typedef enum { SPAM_NO_ERROR = 0, SPAM_MEM_ERROR } SPAMErrNumber;
 
 typedef struct {
   size_t n_rows;
@@ -99,13 +99,25 @@ extern int spam_new_like(SPAMatrix *m_ptr, SPAMatrix a);
 extern int spam_mat_new_eye(SPAMatrix *m_ptr, size_t n);
 
 /**
+ * @brief Creates a new matrix by concatenating columns of two matrices
+ *
+ * @details The number of rows in @p a and @p b must be equal.
+ *
+ * @param m_ptr pointer to new matrix
+ * @param a a matrix
+ * @param b another matrix
+ * @return error status
+ */
+extern int spam_mat_new_colcat(SPAMatrix *m_ptr, SPAMatrix a, SPAMatrix b);
+
+/**
  * @brief Frees a matrix and sets m_ptr to @c NULL
  *
  * @param m_ptr pointer to matrix
  */
 extern void spam_mat_free(SPAMatrix *m_ptr);
 
-/* testing matrix properties */
+/* checking matrix properties */
 
 /**
  * @brief Tests if two matrices are equal
@@ -121,7 +133,7 @@ extern bool spam_mat_eq(SPAMatrix a, SPAMatrix b);
  * @brief Returns the size of a matrix
  *
  * @param a a matrix
- * @return SPAMatrixSize size of @p a
+ * @return size of @p a
  */
 extern SPAMatrixSize spam_mat_size(SPAMatrix a);
 
@@ -131,5 +143,104 @@ extern SPAMatrixSize spam_mat_size(SPAMatrix a);
  * @param a matrix to print
  */
 void spam_mat_print(SPAMatrix a);
+
+/**
+ * @brief Returns the value of a matrix element
+ *
+ * @param a a matrix
+ * @param i row of element
+ * @param j columns of element
+ * @return value of element at row @p i, column @p j
+ */
+extern double spam_mat_get(SPAMatrix a, size_t i, size_t j);
+
+/**
+ * @brief Sets a value of a matrix element
+ *
+ * @param a a matrix
+ * @param i row of element
+ * @param j column of element
+ * @param value value of element
+ */
+extern void spam_mat_set(SPAMatrix a, size_t i, size_t j, double value);
+
+/**
+ * @brief Returns a pointer to a matrix element
+ *
+ * @param a a matrix
+ * @param i row of element
+ * @param j column of element
+ * @return pointer to element
+ */
+extern double *spam_mat_el(SPAMatrix a, size_t i, size_t j);
+
+/**
+ * @brief Adds a constant times a row to another row
+ *
+ * @details
+ * @code
+ * a[i1,*] = a[i1,*] + c * a[i2,*]
+ * @endcode
+ *
+ * @param a a matrix
+ * @param i1 result row
+ * @param i2 other row
+ * @param c constant factor
+ */
+extern void spam_mat_row_add(SPAMatrix a, size_t i1, size_t i2, double c);
+
+/**
+ * @brief Multiplies a row in a matrix by a constant
+ *
+ * @details
+ * @code
+ * a[i1,*] = c * a[i1,*]
+ * @endcode
+ *
+ * @param a a matrix
+ * @param i a row
+ * @param c a constant
+ */
+extern void spam_mat_row_mult(SPAMatrix a, size_t i, double c);
+
+/**
+ * @brief Exchanges rows in a matrix
+ *
+ * @param a a matrix
+ * @param i1 a row to exchange
+ * @param i2 another row to exchange
+ */
+extern void spam_mat_row_exch(SPAMatrix a, size_t i1, size_t i2);
+
+/**
+ * @brief Dummy pivot exchange function
+ *
+ * @param a a matrix
+ * @param pivot_row pivot row
+ * @param pivot_col pivot column
+ */
+extern void
+spam_mat_pivot_no_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
+
+/**
+ * @brief Exchanges pivot row if the current pivot position contains a zero
+ *
+ * @param a a matrix
+ * @param pivot_row pivot row
+ * @param pivot_col pivot column
+ */
+extern void
+spam_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
+
+/**
+ * @brief Exchanges pivot row with the row with the maximum absolute value
+ * element in the pivot column below the pivot row
+ *
+ * @param a a matrix
+ * @param pivot_row pivot row
+ * @param pivot_col pivot column
+ */
+extern void
+spam_mat_pivot_max_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 
 #endif

@@ -12,5 +12,8 @@
     "cmake.revealLog": "never",
     "cmake.configureSettings": {
         "TESTS": "1"
-    }
+    },
+    "cSpell.words": [
+        "colcat"
+    ]
 }
