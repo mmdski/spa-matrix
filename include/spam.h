@@ -6,26 +6,63 @@
 
 #define MAT_INDEX(n_cols, row, col) ((row - 1) * n_cols + (col - 1))
 
-// spam error numbers
-typedef enum { SPAM_NO_ERROR = 0, SPAM_MEM_ERROR } SPAMErrNumber;
+/**
+ * @brief SPA error number
+ *
+ */
+typedef enum {
+  SPA_NO_ERROR = 0, /** Value returned when no error occurs */
+  SPA_MEM_ERROR     /** System memory error */
+} SPAErrNumber;
 
+/**
+ * @brief SPA matrix structure
+ *
+ */
 typedef struct {
-  size_t n_rows;
-  size_t n_cols;
-  double elements[1];
+  size_t n_rows;      /** Number of rows in matrix */
+  size_t n_cols;      /** Number of columns in matrix */
+  double elements[1]; /** Elements of matrix */
 } SPAMatrix_;
 
+/**
+ * @brief SPA matrix object
+ *
+ */
 typedef SPAMatrix_ *SPAMatrix;
 
+/**
+ * @brief SPA matrix size
+ *
+ */
 typedef struct {
-  const size_t n_rows;
-  const size_t n_cols;
+  const size_t n_rows; /** Number of rows */
+  const size_t n_cols; /** Number of columns */
 } SPAMatrixSize;
 
 /* specified precision interface */
-extern double       spam_fl(double value);
-extern void         spam_set_precision(unsigned int precision);
-extern unsigned int spam_get_precision(void);
+
+/**
+ * @brief Returns a value rounded to the precision specified
+ *
+ * @param value value to round
+ * @return double
+ */
+extern double spa_fl(double value);
+
+/**
+ * @brief Set the specified precision of arithmetic
+ *
+ * @param precision
+ */
+extern void spa_set_precision(unsigned int precision);
+
+/**
+ * @brief Get the precision of arithmetic
+ *
+ * @return unsigned int
+ */
+extern unsigned int spa_get_precision(void);
 
 /* spa matrix interface */
 
@@ -37,7 +74,7 @@ extern unsigned int spam_get_precision(void);
  * @param n number of columns
  * @return error status
  */
-extern int spam_mat_new(SPAMatrix *m_ptr, size_t m, size_t n);
+extern int spa_mat_new(SPAMatrix *m_ptr, size_t m, size_t n);
 
 /**
  * @brief Creates a new matrix and initializes all elements to 0
@@ -47,7 +84,7 @@ extern int spam_mat_new(SPAMatrix *m_ptr, size_t m, size_t n);
  * @param n number of columns
  * @return error status
  */
-extern int spam_mat_new_zeros(SPAMatrix *m_ptr, size_t m, size_t n);
+extern int spa_mat_new_zeros(SPAMatrix *m_ptr, size_t m, size_t n);
 
 /**
  * @brief Creates a new matrix and initializes all elements to 1
@@ -57,7 +94,7 @@ extern int spam_mat_new_zeros(SPAMatrix *m_ptr, size_t m, size_t n);
  * @param n number of columns
  * @return error status
  */
-extern int spam_mat_new_ones(SPAMatrix *m_ptr, size_t m, size_t n);
+extern int spa_mat_new_ones(SPAMatrix *m_ptr, size_t m, size_t n);
 
 /**
  * @brief Creates a new matrix and initializes elements by copying from an array
@@ -69,7 +106,7 @@ extern int spam_mat_new_ones(SPAMatrix *m_ptr, size_t m, size_t n);
  * @return error status
  */
 extern int
-spam_mat_new_memcpy(SPAMatrix *m_ptr, const double *src, size_t m, size_t n);
+spa_mat_new_arr(SPAMatrix *m_ptr, const double *src, size_t m, size_t n);
 
 /**
  * @brief Creates a new matrix as a copy of another matrix
@@ -78,7 +115,7 @@ spam_mat_new_memcpy(SPAMatrix *m_ptr, const double *src, size_t m, size_t n);
  * @param a matrix to copy
  * @return error status
  */
-extern int spam_new_copy(SPAMatrix *m_ptr, SPAMatrix a);
+extern int spa_mat_new_copy(SPAMatrix *m_ptr, SPAMatrix a);
 
 /**
  * @brief Creates a new matrix in the shape of another
@@ -87,7 +124,7 @@ extern int spam_new_copy(SPAMatrix *m_ptr, SPAMatrix a);
  * @param a matrix to copy
  * @return error status
  */
-extern int spam_new_like(SPAMatrix *m_ptr, SPAMatrix a);
+extern int spa_mat_new_like(SPAMatrix *m_ptr, SPAMatrix a);
 
 /**
  * @brief Creates a new n by n identity matrix
@@ -96,7 +133,7 @@ extern int spam_new_like(SPAMatrix *m_ptr, SPAMatrix a);
  * @param n number of rows and columns in the identity matrix
  * @return error status
  */
-extern int spam_mat_new_eye(SPAMatrix *m_ptr, size_t n);
+extern int spa_mat_new_eye(SPAMatrix *m_ptr, size_t n);
 
 /**
  * @brief Creates a new matrix by concatenating columns of two matrices
@@ -108,14 +145,14 @@ extern int spam_mat_new_eye(SPAMatrix *m_ptr, size_t n);
  * @param b another matrix
  * @return error status
  */
-extern int spam_mat_new_colcat(SPAMatrix *m_ptr, SPAMatrix a, SPAMatrix b);
+extern int spa_mat_new_colcat(SPAMatrix *m_ptr, SPAMatrix a, SPAMatrix b);
 
 /**
  * @brief Frees a matrix and sets m_ptr to @c NULL
  *
  * @param m_ptr pointer to matrix
  */
-extern void spam_mat_free(SPAMatrix *m_ptr);
+extern void spa_mat_free(SPAMatrix *m_ptr);
 
 /* checking matrix properties */
 
@@ -127,7 +164,7 @@ extern void spam_mat_free(SPAMatrix *m_ptr);
  * @return true if @p a and @p b are equal
  * @return false if @p a and @p b are not equal
  */
-extern bool spam_mat_eq(SPAMatrix a, SPAMatrix b);
+extern bool spa_mat_eq(SPAMatrix a, SPAMatrix b);
 
 /**
  * @brief Returns the size of a matrix
@@ -135,14 +172,14 @@ extern bool spam_mat_eq(SPAMatrix a, SPAMatrix b);
  * @param a a matrix
  * @return size of @p a
  */
-extern SPAMatrixSize spam_mat_size(SPAMatrix a);
+extern SPAMatrixSize spa_mat_size(SPAMatrix a);
 
 /**
  * @brief Prints a matrix to stdout
  *
  * @param a matrix to print
  */
-void spam_mat_print(SPAMatrix a);
+void spa_mat_print(SPAMatrix a);
 
 /**
  * @brief Returns the value of a matrix element
@@ -152,7 +189,7 @@ void spam_mat_print(SPAMatrix a);
  * @param j columns of element
  * @return value of element at row @p i, column @p j
  */
-extern double spam_mat_get(SPAMatrix a, size_t i, size_t j);
+extern double spa_mat_get(SPAMatrix a, size_t i, size_t j);
 
 /**
  * @brief Sets a value of a matrix element
@@ -162,7 +199,7 @@ extern double spam_mat_get(SPAMatrix a, size_t i, size_t j);
  * @param j column of element
  * @param value value of element
  */
-extern void spam_mat_set(SPAMatrix a, size_t i, size_t j, double value);
+extern void spa_mat_set(SPAMatrix a, size_t i, size_t j, double value);
 
 /**
  * @brief Returns a pointer to a matrix element
@@ -172,7 +209,7 @@ extern void spam_mat_set(SPAMatrix a, size_t i, size_t j, double value);
  * @param j column of element
  * @return pointer to element
  */
-extern double *spam_mat_el(SPAMatrix a, size_t i, size_t j);
+extern double *spa_mat_el(SPAMatrix a, size_t i, size_t j);
 
 /**
  * @brief Adds a constant times a row to another row
@@ -187,7 +224,7 @@ extern double *spam_mat_el(SPAMatrix a, size_t i, size_t j);
  * @param i2 other row
  * @param c constant factor
  */
-extern void spam_mat_row_add(SPAMatrix a, size_t i1, size_t i2, double c);
+extern void spa_mat_row_add(SPAMatrix a, size_t i1, size_t i2, double c);
 
 /**
  * @brief Multiplies a row in a matrix by a constant
@@ -201,7 +238,7 @@ extern void spam_mat_row_add(SPAMatrix a, size_t i1, size_t i2, double c);
  * @param i a row
  * @param c a constant
  */
-extern void spam_mat_row_mult(SPAMatrix a, size_t i, double c);
+extern void spa_mat_row_mult(SPAMatrix a, size_t i, double c);
 
 /**
  * @brief Exchanges rows in a matrix
@@ -210,7 +247,7 @@ extern void spam_mat_row_mult(SPAMatrix a, size_t i, double c);
  * @param i1 a row to exchange
  * @param i2 another row to exchange
  */
-extern void spam_mat_row_exch(SPAMatrix a, size_t i1, size_t i2);
+extern void spa_mat_row_exch(SPAMatrix a, size_t i1, size_t i2);
 
 /**
  * @brief Dummy pivot exchange function
@@ -220,7 +257,7 @@ extern void spam_mat_row_exch(SPAMatrix a, size_t i1, size_t i2);
  * @param pivot_col pivot column
  */
 extern void
-spam_mat_pivot_no_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
+spa_mat_pivot_no_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 
 /**
  * @brief Exchanges pivot row if the current pivot position contains a zero
@@ -230,7 +267,7 @@ spam_mat_pivot_no_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
  * @param pivot_col pivot column
  */
 extern void
-spam_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
+spa_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 
 /**
  * @brief Exchanges pivot row with the row with the maximum absolute value
@@ -241,6 +278,6 @@ spam_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
  * @param pivot_col pivot column
  */
 extern void
-spam_mat_pivot_max_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
+spa_mat_pivot_max_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 
 #endif

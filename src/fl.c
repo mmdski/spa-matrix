@@ -6,7 +6,7 @@
 unsigned int fl_precision = 16;
 
 double
-spam_fl(double value) {
+spa_fl(double value) {
 
   int    exp10;
   double inf;
@@ -29,12 +29,12 @@ spam_fl(double value) {
 }
 
 void
-spam_set_precision(unsigned int precision) {
+spa_set_precision(unsigned int precision) {
   assert(precision > 0);
   fl_precision = precision;
 }
 
 unsigned int
-spam_get_precision(void) {
+spa_get_precision(void) {
   return fl_precision;
 }

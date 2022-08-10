@@ -8,7 +8,7 @@
 #include <spam.h>
 
 int
-spam_mat_new(SPAMatrix *m_ptr, size_t m, size_t n) {
+spa_mat_new(SPAMatrix *m_ptr, size_t m, size_t n) {
 
   assert(m_ptr);
   assert(m > 0 && n > 0);
@@ -16,99 +16,98 @@ spam_mat_new(SPAMatrix *m_ptr, size_t m, size_t n) {
   errno  = 0;
   *m_ptr = malloc(sizeof(**m_ptr) + sizeof(double) * (m * n - 1));
   if (!(*m_ptr))
-    return SPAM_MEM_ERROR;
+    return SPA_MEM_ERROR;
 
   (*m_ptr)->n_rows = m;
   (*m_ptr)->n_cols = n;
 
-  return SPAM_NO_ERROR;
+  return SPA_NO_ERROR;
 }
 
 int
-spam_mat_new_zeros(SPAMatrix *m_ptr, size_t m, size_t n) {
+spa_mat_new_zeros(SPAMatrix *m_ptr, size_t m, size_t n) {
 
   assert(m_ptr);
   assert(m > 0 && n > 0);
 
-  int new_status = spam_mat_new(m_ptr, m, n);
-  if (new_status == SPAM_MEM_ERROR)
+  int new_status = spa_mat_new(m_ptr, m, n);
+  if (new_status == SPA_MEM_ERROR)
     return new_status;
 
   for (size_t i = 0; i < m * n; ++i)
     (*m_ptr)->elements[i] = 0;
 
-  return SPAM_NO_ERROR;
+  return SPA_NO_ERROR;
 }
 
 int
-spam_mat_new_ones(SPAMatrix *m_ptr, size_t m, size_t n) {
+spa_mat_new_ones(SPAMatrix *m_ptr, size_t m, size_t n) {
 
   assert(m_ptr);
   assert(m > 0 && n > 0);
 
-  int new_status = spam_mat_new(m_ptr, m, n);
-  if (new_status == SPAM_MEM_ERROR)
+  int new_status = spa_mat_new(m_ptr, m, n);
+  if (new_status == SPA_MEM_ERROR)
     return new_status;
 
   for (size_t i = 0; i < m * n; ++i)
     (*m_ptr)->elements[i] = 1;
 
-  return SPAM_NO_ERROR;
+  return SPA_NO_ERROR;
 }
 
 int
-spam_mat_new_memcpy(SPAMatrix *m_ptr, const double *src, size_t m, size_t n) {
+spa_mat_new_arr(SPAMatrix *m_ptr, const double *src, size_t m, size_t n) {
 
   assert(m_ptr);
   assert(src);
   assert(m > 0 && n > 0);
 
-  int new_status = spam_mat_new(m_ptr, m, n);
-  if (new_status == SPAM_MEM_ERROR) {
+  int new_status = spa_mat_new(m_ptr, m, n);
+  if (new_status == SPA_MEM_ERROR) {
     return new_status;
   }
 
   for (size_t i = 0; i < m * n; ++i)
     (*m_ptr)->elements[i] = src[i];
 
-  return SPAM_NO_ERROR;
+  return SPA_NO_ERROR;
 }
 
 int
-spam_mat_new_copy(SPAMatrix *m_ptr, SPAMatrix a) {
+spa_mat_new_copy(SPAMatrix *m_ptr, SPAMatrix a) {
 
   assert(m_ptr);
   assert(a);
 
-  int new_status =
-      spam_mat_new_memcpy(m_ptr, a->elements, a->n_rows, a->n_cols);
-  if (new_status == SPAM_MEM_ERROR)
+  int new_status = spa_mat_new_arr(m_ptr, a->elements, a->n_rows, a->n_cols);
+  if (new_status == SPA_MEM_ERROR)
     return new_status;
 
-  return SPAM_NO_ERROR;
+  return SPA_NO_ERROR;
 }
 
 int
-spam_mat_new_like(SPAMatrix *m_ptr, SPAMatrix a) {
+spa_mat_new_like(SPAMatrix *m_ptr, SPAMatrix a) {
 
   assert(m_ptr);
   assert(a);
 
-  int new_status = spam_mat_new(m_ptr, a->n_rows, a->n_cols);
-  if (new_status == SPAM_MEM_ERROR)
+  int new_status = spa_mat_new(m_ptr, a->n_rows, a->n_cols);
+  if (new_status == SPA_MEM_ERROR)
     return new_status;
 
-  return SPAM_NO_ERROR;
+  return SPA_NO_ERROR;
 }
 
 int
-spam_mat_new_eye(SPAMatrix *m_ptr, size_t n) {
+spa_mat_new_eye(SPAMatrix *m_ptr, size_t n) {
 
   assert(m_ptr);
   assert(n > 0);
 
-  int new_status = spam_mat_new(m_ptr, n, n);
-  if (new_status == SPAM_MEM_ERROR)
+  int new_status = spa_mat_new(m_ptr, n, n);
+  if (new_status == SPA_MEM_ERROR)
     return new_status;
 
   for (size_t i = 1; i <= n; ++i) {
@@ -120,12 +119,12 @@ spam_mat_new_eye(SPAMatrix *m_ptr, size_t n) {
     }
   }
 
-  return SPAM_NO_ERROR;
+  return SPA_NO_ERROR;
 }
 
 // column concatenate
 int
-spam_mat_new_colcat(SPAMatrix *m_ptr, SPAMatrix a, SPAMatrix b) {
+spa_mat_new_colcat(SPAMatrix *m_ptr, SPAMatrix a, SPAMatrix b) {
 
   assert(m_ptr);
   assert(a && b);
@@ -133,26 +132,25 @@ spam_mat_new_colcat(SPAMatrix *m_ptr, SPAMatrix a, SPAMatrix b) {
 
   size_t total_columns = a->n_cols + b->n_cols;
 
-  int new_status = spam_mat_new(m_ptr, a->n_rows, total_columns);
-  if (new_status == SPAM_MEM_ERROR)
+  int new_status = spa_mat_new(m_ptr, a->n_rows, total_columns);
+  if (new_status == SPA_MEM_ERROR)
     return new_status;
 
   for (size_t i = 1; i <= a->n_rows; ++i) {
 
     for (size_t j = 1; j <= a->n_cols; ++j)
-      (*m_ptr)->elements[MAT_INDEX(total_columns, i, j)] =
-          spam_mat_get(a, i, j);
+      (*m_ptr)->elements[MAT_INDEX(total_columns, i, j)] = spa_mat_get(a, i, j);
 
     for (size_t j = 1; j <= b->n_cols; ++j)
       (*m_ptr)->elements[MAT_INDEX(total_columns, i, j + a->n_cols)] =
-          spam_mat_get(b, i, j);
+          spa_mat_get(b, i, j);
   }
 
-  return SPAM_NO_ERROR;
+  return SPA_NO_ERROR;
 }
 
 void
-spam_mat_free(SPAMatrix *m_ptr) {
+spa_mat_free(SPAMatrix *m_ptr) {
 
   if (!m_ptr || !(*m_ptr))
     return;
@@ -162,7 +160,7 @@ spam_mat_free(SPAMatrix *m_ptr) {
 }
 
 bool
-spam_mat_eq(SPAMatrix a, SPAMatrix b) {
+spa_mat_eq(SPAMatrix a, SPAMatrix b) {
 
   // return false if either a or b is NULL
   if (!a || !b)
@@ -183,7 +181,7 @@ spam_mat_eq(SPAMatrix a, SPAMatrix b) {
 }
 
 SPAMatrixSize
-spam_mat_size(SPAMatrix a) {
+spa_mat_size(SPAMatrix a) {
 
   assert(a);
 
@@ -193,7 +191,7 @@ spam_mat_size(SPAMatrix a) {
 }
 
 void
-spam_mat_print(SPAMatrix a) {
+spa_mat_print(SPAMatrix a) {
 
   assert(a);
 
@@ -206,7 +204,7 @@ spam_mat_print(SPAMatrix a) {
 }
 
 double
-spam_mat_get(SPAMatrix a, size_t i, size_t j) {
+spa_mat_get(SPAMatrix a, size_t i, size_t j) {
 
   assert(a);
   assert(1 <= i && i <= a->n_rows);
@@ -216,7 +214,7 @@ spam_mat_get(SPAMatrix a, size_t i, size_t j) {
 }
 
 void
-spam_mat_set(SPAMatrix a, size_t i, size_t j, double value) {
+spa_mat_set(SPAMatrix a, size_t i, size_t j, double value) {
 
   assert(a);
   assert(1 <= i && i <= a->n_rows);
@@ -226,7 +224,7 @@ spam_mat_set(SPAMatrix a, size_t i, size_t j, double value) {
 }
 
 double *
-spam_mat_el(SPAMatrix a, size_t i, size_t j) {
+spa_mat_el(SPAMatrix a, size_t i, size_t j) {
 
   assert(a);
   assert(1 <= i && i <= a->n_rows);
@@ -237,7 +235,7 @@ spam_mat_el(SPAMatrix a, size_t i, size_t j) {
 
 // a[i1,*] += c*a[i2,*]
 void
-spam_mat_row_add(SPAMatrix a, size_t i1, size_t i2, double c) {
+spa_mat_row_add(SPAMatrix a, size_t i1, size_t i2, double c) {
 
   assert(a);
   assert(1 <= i1 && i1 <= a->n_rows);
@@ -246,28 +244,28 @@ spam_mat_row_add(SPAMatrix a, size_t i1, size_t i2, double c) {
   double sum, prod;
 
   for (size_t j = 1; j <= a->n_cols; ++j) {
-    prod = spam_fl(c * a->elements[MAT_INDEX(a->n_cols, i2, j)]);
-    sum  = spam_fl(a->elements[MAT_INDEX(a->n_cols, i1, j)] + prod);
+    prod = spa_fl(c * a->elements[MAT_INDEX(a->n_cols, i2, j)]);
+    sum  = spa_fl(a->elements[MAT_INDEX(a->n_cols, i1, j)] + prod);
     a->elements[MAT_INDEX(a->n_cols, i1, j)] = sum;
   }
 }
 
 // a[i1,*] *= c*a[i1,*]
 void
-spam_mat_row_mult(SPAMatrix a, size_t i, double c) {
+spa_mat_row_mult(SPAMatrix a, size_t i, double c) {
 
   assert(a);
   assert(1 <= i && i <= a->n_rows);
 
   for (size_t j = 1; j <= a->n_cols; ++j) {
     a->elements[MAT_INDEX(a->n_cols, i, j)] =
-        spam_fl(c * a->elements[MAT_INDEX(a->n_cols, i, j)]);
+        spa_fl(c * a->elements[MAT_INDEX(a->n_cols, i, j)]);
   }
 }
 
 // a[i1,*] <=> c*a[i2,*]
 void
-spam_mat_row_exch(SPAMatrix a, size_t i1, size_t i2) {
+spa_mat_row_exch(SPAMatrix a, size_t i1, size_t i2) {
 
   assert(a);
   assert(1 <= i1 && i1 <= a->n_rows);
@@ -287,14 +285,14 @@ spam_mat_row_exch(SPAMatrix a, size_t i1, size_t i2) {
 }
 
 void
-spam_mat_pivot_no_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
+spa_mat_pivot_no_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
   (void) a;
   (void) pivot_row;
   (void) pivot_col;
 }
 
 void
-spam_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
+spa_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
 
   assert(a);
   assert(1 <= pivot_row && pivot_row <= a->n_rows);
@@ -307,26 +305,26 @@ spam_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
   }
 
   if (i <= a->n_rows)
-    spam_mat_row_exch(a, i, pivot_row);
+    spa_mat_row_exch(a, i, pivot_row);
 }
 
 void
-spam_mat_pivot_max_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
+spa_mat_pivot_max_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
 
   assert(a);
   assert(1 <= pivot_row && pivot_row <= a->n_rows);
   assert(1 <= pivot_col && pivot_col <= a->n_cols);
 
   size_t max_row       = pivot_row;
-  double abs_max_value = fabs(spam_mat_get(a, pivot_row, pivot_col));
+  double abs_max_value = fabs(spa_mat_get(a, pivot_row, pivot_col));
   double abs_value;
   for (size_t i = pivot_row + 1; i <= a->n_rows; ++i) {
-    abs_value = fabs(spam_mat_get(a, i, pivot_col));
+    abs_value = fabs(spa_mat_get(a, i, pivot_col));
     if (abs_value > abs_max_value) {
       abs_max_value = abs_value;
       max_row       = i;
     }
   }
 
-  spam_mat_row_exch(a, pivot_row, max_row);
+  spa_mat_row_exch(a, pivot_row, max_row);
 }
