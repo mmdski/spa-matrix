@@ -23,6 +23,38 @@ spam_mat_new(SPAMatrix *m_ptr, size_t m, size_t n) {
 }
 
 int
+spam_mat_new_zeros(SPAMatrix *m_ptr, size_t m, size_t n) {
+
+  assert(m_ptr);
+  assert(m > 0 && n > 0);
+
+  int new_status = spam_mat_new(m_ptr, m, n);
+  if (new_status == SPAM_MEM_ERROR)
+    return new_status;
+
+  for (size_t i = 0; i < m * n; i++)
+    (*m_ptr)->elements[i] = 0;
+
+  return SPAM_NO_ERROR;
+}
+
+int
+spam_mat_new_ones(SPAMatrix *m_ptr, size_t m, size_t n) {
+
+  assert(m_ptr);
+  assert(m > 0 && n > 0);
+
+  int new_status = spam_mat_new(m_ptr, m, n);
+  if (new_status == SPAM_MEM_ERROR)
+    return new_status;
+
+  for (size_t i = 0; i < m * n; i++)
+    (*m_ptr)->elements[i] = 1;
+
+  return SPAM_NO_ERROR;
+}
+
+int
 spam_mat_new_memcpy(SPAMatrix *m_ptr, const double *src, size_t m, size_t n) {
 
   assert(m_ptr);
@@ -30,13 +62,39 @@ spam_mat_new_memcpy(SPAMatrix *m_ptr, const double *src, size_t m, size_t n) {
   assert(m > 0 && n > 0);
 
   int new_status = spam_mat_new(m_ptr, m, n);
-  if (new_status != SPAM_NO_ERROR) {
-    spam_mat_free(m_ptr); // try to free the matrix
+  if (new_status == SPAM_MEM_ERROR) {
     return new_status;
   }
 
   for (size_t i = 0; i < m * n; i++)
     (*m_ptr)->elements[i] = src[i];
+
+  return SPAM_NO_ERROR;
+}
+
+int
+spam_mat_new_copy(SPAMatrix *m_ptr, SPAMatrix a) {
+
+  assert(m_ptr);
+  assert(a);
+
+  int new_status =
+      spam_mat_new_memcpy(m_ptr, a->elements, a->n_rows, a->n_cols);
+  if (new_status == SPAM_MEM_ERROR)
+    return new_status;
+
+  return SPAM_NO_ERROR;
+}
+
+int
+spam_mat_new_like(SPAMatrix *m_ptr, SPAMatrix a) {
+
+  assert(m_ptr);
+  assert(a);
+
+  int new_status = spam_mat_new(m_ptr, a->n_rows, a->n_cols);
+  if (new_status == SPAM_MEM_ERROR)
+    return new_status;
 
   return SPAM_NO_ERROR;
 }
