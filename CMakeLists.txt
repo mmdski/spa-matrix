@@ -13,17 +13,22 @@ message(STATUS "System name: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "C Compiler ID: ${CMAKE_C_COMPILER_ID}")
 message(STATUS "CXX Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
 
+set(NO_LEAK_PATH "${CMAKE_SOURCE_DIR}/tests/san-check/no-leak.c")
+
 # add debug and ASAN flags for ASAN build
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Asan")
-    set(NO_LEAK_PATH "${CMAKE_SOURCE_DIR}/tests/san-check/no-leak.c")
-
     # determine if ASan is available
     try_compile(ASAN_AVAILABLE "${CMAKE_BINARY_DIR}"
         SOURCES "${NO_LEAK_PATH}"
         CMAKE_FLAGS "-fsanitize=address"
         LINK_OPTIONS "-fsanitize=address"
         COPY_FILE "${CMAKE_BINARY_DIR}/lsan-check/no-leak")
-    message(STATUS "ASan available: ${ASAN_AVAILABLE}")
+
+    if(ASAN_AVAILABLE)
+        message(STATUS "ASan available: ${ASAN_AVAILABLE}")
+    else()
+        message(FATAL_ERROR "ASan is not available")
+    endif()
 
     # determine if LSan is available with ASan
     set(LSAN_AVAILABLE FALSE)
@@ -61,6 +66,22 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Asan")
         add_compile_options(-fsanitize=undefined -fno-sanitize-recover=all)
         add_link_options(-fsanitize=undefined)
     endif()
+
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Msan")
+    # determine if MSan is available
+    try_compile(MSAN_AVAILABLE "${CMAKE_BINARY_DIR}"
+        SOURCES "${NO_LEAK_PATH}"
+        CMAKE_FLAGS "-fsanitize=memory"
+        LINK_OPTIONS "-fsanitize=memory")
+
+    if(MSAN_AVAILABLE)
+        message(STATUS "MSan available: ${MSAN_AVAILABLE}")
+    else()
+        message(FATAL_ERROR "MSan is not available")
+    endif()
+
+    add_compile_options(-fsanitize=memory -fno-omit-frame-pointer -g -O2)
+    add_link_options(-fsanitize=memory)
 endif()
 
 include_directories(include)

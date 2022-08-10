@@ -13,3 +13,7 @@ buildType:
       short: Asan
       long: Instrument with Address Sanitizer
       buildType: Asan
+    msan:
+      short: Msan
+      long: Instrument with Memory Sanitizer
+      buildType: Msan
