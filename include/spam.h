@@ -1,6 +1,7 @@
 #ifndef SPAM_H_
 #define SPAM_H_
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 #define MAT_INDEX(n_cols, row, col) ((row - 1) * n_cols + (col - 1))
@@ -89,6 +90,15 @@ extern int spam_new_copy(SPAMatrix *m_ptr, SPAMatrix a);
 extern int spam_new_like(SPAMatrix *m_ptr, SPAMatrix a);
 
 /**
+ * @brief Creates a new n by n identity matrix
+ *
+ * @param m_ptr pointer to new matrix
+ * @param n number of rows and columns in the identity matrix
+ * @return error status
+ */
+extern int spam_mat_new_eye(SPAMatrix *m_ptr, size_t n);
+
+/**
  * @brief Frees a matrix and sets m_ptr to @c NULL
  *
  * @param m_ptr pointer to matrix
@@ -114,5 +124,12 @@ extern bool spam_mat_eq(SPAMatrix a, SPAMatrix b);
  * @return SPAMatrixSize size of @p a
  */
 extern SPAMatrixSize spam_mat_size(SPAMatrix a);
+
+/**
+ * @brief Prints a matrix to stdout
+ *
+ * @param a matrix to print
+ */
+void spam_mat_print(SPAMatrix a);
 
 #endif

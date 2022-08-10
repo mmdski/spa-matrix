@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include <spam.h>
@@ -32,7 +33,7 @@ spam_mat_new_zeros(SPAMatrix *m_ptr, size_t m, size_t n) {
   if (new_status == SPAM_MEM_ERROR)
     return new_status;
 
-  for (size_t i = 0; i < m * n; i++)
+  for (size_t i = 0; i < m * n; ++i)
     (*m_ptr)->elements[i] = 0;
 
   return SPAM_NO_ERROR;
@@ -48,7 +49,7 @@ spam_mat_new_ones(SPAMatrix *m_ptr, size_t m, size_t n) {
   if (new_status == SPAM_MEM_ERROR)
     return new_status;
 
-  for (size_t i = 0; i < m * n; i++)
+  for (size_t i = 0; i < m * n; ++i)
     (*m_ptr)->elements[i] = 1;
 
   return SPAM_NO_ERROR;
@@ -66,7 +67,7 @@ spam_mat_new_memcpy(SPAMatrix *m_ptr, const double *src, size_t m, size_t n) {
     return new_status;
   }
 
-  for (size_t i = 0; i < m * n; i++)
+  for (size_t i = 0; i < m * n; ++i)
     (*m_ptr)->elements[i] = src[i];
 
   return SPAM_NO_ERROR;
@@ -95,6 +96,28 @@ spam_mat_new_like(SPAMatrix *m_ptr, SPAMatrix a) {
   int new_status = spam_mat_new(m_ptr, a->n_rows, a->n_cols);
   if (new_status == SPAM_MEM_ERROR)
     return new_status;
+
+  return SPAM_NO_ERROR;
+}
+
+int
+spam_mat_new_eye(SPAMatrix *m_ptr, size_t n) {
+
+  assert(m_ptr);
+  assert(n > 0);
+
+  int new_status = spam_mat_new(m_ptr, n, n);
+  if (new_status == SPAM_MEM_ERROR)
+    return new_status;
+
+  for (size_t i = 1; i <= n; ++i) {
+    for (size_t j = 1; j <= n; ++j) {
+      if (i == j)
+        (*m_ptr)->elements[MAT_INDEX(n, i, j)] = 1;
+      else
+        (*m_ptr)->elements[MAT_INDEX(n, i, j)] = 0;
+    }
+  }
 
   return SPAM_NO_ERROR;
 }
@@ -138,4 +161,17 @@ spam_mat_size(SPAMatrix a) {
   SPAMatrixSize size = {.n_rows = a->n_rows, .n_cols = a->n_cols};
 
   return size;
+}
+
+void
+spam_mat_print(SPAMatrix a) {
+
+  assert(a);
+
+  for (size_t i = 1; i <= a->n_rows; ++i) {
+    for (size_t j = 1; j <= a->n_cols; ++j) {
+      printf("%10g", a->elements[MAT_INDEX(a->n_cols, i, j)]);
+    }
+    printf("\n");
+  }
 }
