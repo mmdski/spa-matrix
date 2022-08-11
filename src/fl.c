@@ -29,12 +29,12 @@ spa_fl(double value) {
 }
 
 void
-spa_set_precision(unsigned int precision) {
+spa_precision_set(unsigned int precision) {
   assert(precision > 0);
   fl_precision = precision;
 }
 
 unsigned int
-spa_get_precision(void) {
+spa_precision_get(void) {
   return fl_precision;
 }

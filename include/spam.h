@@ -51,14 +51,14 @@ extern double spa_fl(double value);
  *
  * @param precision
  */
-extern void spa_set_precision(unsigned int precision);
+extern void spa_precision_set(unsigned int precision);
 
 /**
  * @brief Get the precision of arithmetic
  *
  * @return unsigned int
  */
-extern unsigned int spa_get_precision(void);
+extern unsigned int spa_precision_get(void);
 
 /* spa matrix interface */
 
@@ -246,14 +246,14 @@ extern void spa_mat_row_mult(SPAMatrix a, size_t i, double c);
 extern void spa_mat_row_exch(SPAMatrix a, size_t i1, size_t i2);
 
 /**
- * @brief Dummy pivot exchange function
+ * @brief Dummy pivot row exchange function
  *
  * @param a a matrix
  * @param pivot_row pivot row
  * @param pivot_col pivot column
  */
 extern void
-spa_mat_pivot_no_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
+spa_mat_prow_exch_no(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 
 /**
  * @brief Exchanges pivot row if the current pivot position contains a zero
@@ -263,7 +263,7 @@ spa_mat_pivot_no_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
  * @param pivot_col pivot column
  */
 extern void
-spa_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
+spa_mat_prow_exch_zero(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 
 /**
  * @brief Exchanges pivot row with the row with the maximum absolute value
@@ -274,7 +274,7 @@ spa_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
  * @param pivot_col pivot column
  */
 extern void
-spa_mat_pivot_max_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
+spa_mat_prow_exch_max(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 
 /**
  * @brief Reduce a matrix using the Gauss reduction method

@@ -10,19 +10,19 @@ TEST(Fl, SetPrecisionTest) {
   (void) precision;
 
   precision = 16;
-  spa_set_precision(precision);
-  ASSERT_EQ(spa_get_precision(), precision);
+  spa_precision_set(precision);
+  ASSERT_EQ(spa_precision_get(), precision);
 
   precision = 3;
-  spa_set_precision(precision);
-  ASSERT_EQ(spa_get_precision(), precision);
+  spa_precision_set(precision);
+  ASSERT_EQ(spa_precision_get(), precision);
 }
 
 TEST(Fl, ComputeTest) {
-  spa_set_precision(2);
+  spa_precision_set(2);
   ASSERT_FLOAT_EQ(spa_fl(3. / 80.), 0.038);
 
-  spa_set_precision(3);
+  spa_precision_set(3);
   ASSERT_FLOAT_EQ(spa_fl(89. / 47.), 1.89);
   ASSERT_FLOAT_EQ(spa_fl(1.89 * 47), 88.8);
   ASSERT_FLOAT_EQ(spa_fl(1.89 * 28), 52.9);

@@ -292,14 +292,14 @@ spa_mat_row_exch(SPAMatrix a, size_t i1, size_t i2) {
 }
 
 void
-spa_mat_pivot_no_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
+spa_mat_prow_exch_no(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
   (void) a;
   (void) pivot_row;
   (void) pivot_col;
 }
 
 void
-spa_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
+spa_mat_prow_exch_zero(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
 
   assert(a);
   assert(1 <= pivot_row && pivot_row <= a->n_rows);
@@ -316,7 +316,7 @@ spa_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
 }
 
 void
-spa_mat_pivot_max_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
+spa_mat_prow_exch_max(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
 
   assert(a);
   assert(1 <= pivot_row && pivot_row <= a->n_rows);

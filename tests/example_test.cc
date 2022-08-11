@@ -18,7 +18,7 @@ TEST(Chapter2Examples, BasicColumnsExample) {
   SPAMatrix e = NULL;
   spa_mat_new_copy(&e, a);
 
-  spa_gauss_reduce(e, spa_mat_pivot_zero_exch);
+  spa_gauss_reduce(e, spa_mat_prow_exch_zero);
 
   size_t *basic_cols   = (size_t *) malloc(n_cols * sizeof(size_t));
   size_t  n_basic_cols = spa_gauss_basic_cols(e, basic_cols);
