@@ -161,6 +161,16 @@ spa_mat_free(SPAMatrix *m_ptr) {
   *m_ptr = NULL;
 }
 
+void
+spa_mat_copy(SPAMatrix a, SPAMatrix b) {
+
+  assert(a && b);
+  assert((a->n_rows == b->n_rows) && (a->n_cols == b->n_cols));
+
+  for (size_t i = 0; i < a->n_rows * a->n_cols; ++i)
+    a->elements[i] = b->elements[i];
+}
+
 bool
 spa_mat_eq(SPAMatrix a, SPAMatrix b) {
 

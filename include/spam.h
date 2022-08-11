@@ -150,7 +150,17 @@ extern int spa_mat_new_colcat(SPAMatrix *m_ptr, SPAMatrix a, SPAMatrix b);
  */
 extern void spa_mat_free(SPAMatrix *m_ptr);
 
-/* checking matrix properties */
+/**
+ * @brief Copies the contents of one matrix into another matrix
+ *
+ * @details
+ * Copies the contents of @p b into @p a. The size of @p a and @p b must be
+ * equal.
+ *
+ * @param a a matrix
+ * @param b another matrix
+ */
+extern void spa_mat_copy(SPAMatrix a, SPAMatrix b);
 
 /**
  * @brief Tests if two matrices are equal
