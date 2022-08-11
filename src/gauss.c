@@ -54,7 +54,7 @@ spa_gauss_jordan_reduce(SPAMatrix a, SPAPivotExchFunc pivot_exch_func) {
        pivot_col++) {
 
     pivot_exch_func(a, pivot_row, pivot_col);
-    pivot_value = a->elements[MAT_INDEX(a->n_cols, pivot_row, pivot_col)];
+    pivot_value = spa_mat_get(a, pivot_row, pivot_col);
 
     // pivot value is already zero
     if (pivot_value == 0)
@@ -65,7 +65,7 @@ spa_gauss_jordan_reduce(SPAMatrix a, SPAPivotExchFunc pivot_exch_func) {
 
     for (size_t i = pivot_row + 1; i <= a->n_rows; i++) {
 
-      row_value = a->elements[MAT_INDEX(a->n_cols, pivot_row, pivot_col)];
+      row_value = spa_mat_get(a, i, pivot_col);
 
       // row value in pivot column is already zero
       if (row_value == 0) {
@@ -76,7 +76,7 @@ spa_gauss_jordan_reduce(SPAMatrix a, SPAPivotExchFunc pivot_exch_func) {
 
     for (size_t i = 1; i < pivot_row; i++) {
 
-      row_value = a->elements[MAT_INDEX(a->n_cols, i, pivot_col)];
+      row_value = spa_mat_get(a, i, pivot_col);
 
       // row value in pivot column is already zero
       if (row_value == 0)
