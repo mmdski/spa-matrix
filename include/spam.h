@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define MAT_INDEX(n_cols, row, col) ((row - 1) * n_cols + (col - 1))
-
 /**
  * @brief SPA error number
  *
@@ -16,20 +14,10 @@ typedef enum {
 } SPAErrNumber;
 
 /**
- * @brief SPA matrix structure
- *
- */
-typedef struct {
-  size_t n_rows;      /** Number of rows in matrix */
-  size_t n_cols;      /** Number of columns in matrix */
-  double elements[1]; /** Elements of matrix */
-} SPAMatrix_;
-
-/**
  * @brief SPA matrix object
  *
  */
-typedef SPAMatrix_ *SPAMatrix;
+typedef struct SPAMatrix_ *SPAMatrix;
 
 /**
  * @brief SPA matrix size
@@ -39,6 +27,14 @@ typedef struct {
   const size_t n_rows; /** Number of rows */
   const size_t n_cols; /** Number of columns */
 } SPAMatrixSize;
+
+/**
+ * @brief Pivot exchange function
+ *
+ */
+typedef void (*SPAPivotExchFunc)(SPAMatrix a,
+                                 size_t    pivot_row,
+                                 size_t    pivot_col);
 
 /* specified precision interface */
 
@@ -224,7 +220,7 @@ extern double *spa_mat_el(SPAMatrix a, size_t i, size_t j);
  * @param i2 other row
  * @param c constant factor
  */
-extern void spa_mat_row_add(SPAMatrix a, size_t i1, size_t i2, double c);
+extern void spa_mat_row_add_row(SPAMatrix a, size_t i1, size_t i2, double c);
 
 /**
  * @brief Multiplies a row in a matrix by a constant
@@ -279,5 +275,55 @@ spa_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
  */
 extern void
 spa_mat_pivot_max_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col);
+
+/**
+ * @brief Reduce a matrix using the Gauss reduction method
+ *
+ * @param a a matrix
+ * @param pivot_exch_func a matrix pivot exchange function
+ */
+extern void spa_gauss_reduce(SPAMatrix a, SPAPivotExchFunc pivot_exch_func);
+
+/**
+ * @brief Reduce a matrix using the Gauss-Jordan reduction method
+ *
+ * @param a a matrix
+ * @param pivot_exch_func a matrix pivot exchange function
+ */
+extern void spa_gauss_jordan_reduce(SPAMatrix        a,
+                                    SPAPivotExchFunc pivot_exch_func);
+
+/**
+ * @brief Solve for x by back substitution
+ *
+ * @details
+ * @p g_reduced must be an augmented matrix in the fashion of @c [A|B], where @c
+ * A is a coefficient matrix and @c B is a matrix of known values. The number of
+ * rows in @p x must be equal to the number of columns in @c A. The number of
+ * columns in @p x must be equal to the number of columns in @p B.
+ *
+ * @param g_reduced a Gauss-reduced matrix
+ * @param x an appropriately sized matrix
+ */
+extern void spa_gauss_back_sub(SPAMatrix g_reduced, SPAMatrix x);
+
+/**
+ * @brief Solves a system of equations using Gauss reduction and back
+ * substitution
+ *
+ * @details
+ * If @p *x_ptr is @c NULL, @p *x_ptr is set to a newly crated matrix.
+ * Otherwise, @p *x_ptr must be an appropriately sized matrix.
+ *
+ * @param a a coefficient matrix
+ * @param b a matrix of knowns
+ * @param x_ptr a pointer to a matrix
+ * @param pivot_exch_func a matrix pivot exchange function
+ * @return error status
+ */
+extern int spa_gauss_solve(SPAMatrix        a,
+                           SPAMatrix        b,
+                           SPAMatrix       *x_ptr,
+                           SPAPivotExchFunc pivot_exch_func);
 
 #endif

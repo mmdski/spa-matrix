@@ -7,6 +7,8 @@
 
 #include <spam.h>
 
+#include "matrix.h"
+
 int
 spa_mat_new(SPAMatrix *m_ptr, size_t m, size_t n) {
 
@@ -235,7 +237,7 @@ spa_mat_el(SPAMatrix a, size_t i, size_t j) {
 
 // a[i1,*] += c*a[i2,*]
 void
-spa_mat_row_add(SPAMatrix a, size_t i1, size_t i2, double c) {
+spa_mat_row_add_row(SPAMatrix a, size_t i1, size_t i2, double c) {
 
   assert(a);
   assert(1 <= i1 && i1 <= a->n_rows);
