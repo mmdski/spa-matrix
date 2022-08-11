@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "matrix.h"
+
 unsigned int fl_precision = 16;
 
 double
@@ -11,14 +13,14 @@ spa_fl(double value) {
   int    exp10;
   double inf;
 
-  if (value > 0) {
+  if (value > ZERO_EPS) {
     exp10 = (int) ceil(log10(value));
     inf   = INFINITY;
-  } else if (value < 0) {
+  } else if (value < -ZERO_EPS) {
     exp10 = (int) ceil(log10(-value));
     inf   = -INFINITY;
   } else {
-    return value;
+    return 0;
   }
 
   double sig10    = value / pow(10, exp10);

@@ -54,8 +54,6 @@ spa_gauss_elim(SPAMatrix a, SPAPivotExchFunc pivot_exch_func) {
     else {
       ++pivot_col;
     }
-
-    spa_mat_print(a);
   }
 }
 
@@ -66,15 +64,15 @@ spa_gauss_jordan_elim(SPAMatrix a, SPAPivotExchFunc pivot_exch_func) {
 
   double pivot_value, row_value, multiplier;
 
-  for (size_t pivot_col = 1, pivot_row = 1;
-       pivot_col <= a->n_cols && pivot_row <= a->n_rows;
-       pivot_col++) {
+  for (size_t pivot_row = 1, pivot_col = 1;
+       pivot_row <= a->n_rows && pivot_col <= a->n_cols;
+       ++pivot_col) {
 
     pivot_exch_func(a, pivot_row, pivot_col);
     pivot_value = spa_mat_get(a, pivot_row, pivot_col);
 
     // pivot value is already zero
-    if (pivot_value == 0)
+    if (fabs(pivot_value) < ZERO_EPS)
       continue;
 
     multiplier = spa_fl(1. / pivot_value);
@@ -85,9 +83,9 @@ spa_gauss_jordan_elim(SPAMatrix a, SPAPivotExchFunc pivot_exch_func) {
       row_value = spa_mat_get(a, i, pivot_col);
 
       // row value in pivot column is already zero
-      if (row_value == 0) {
+      if (fabs(row_value) < ZERO_EPS)
         continue;
-      }
+
       spa_mat_row_add_row(a, i, pivot_row, -row_value);
     }
 
@@ -96,13 +94,13 @@ spa_gauss_jordan_elim(SPAMatrix a, SPAPivotExchFunc pivot_exch_func) {
       row_value = spa_mat_get(a, i, pivot_col);
 
       // row value in pivot column is already zero
-      if (row_value == 0)
+      if (fabs(row_value) < ZERO_EPS)
         continue;
 
       spa_mat_row_add_row(a, i, pivot_row, -row_value);
     }
 
-    pivot_row++;
+    ++pivot_row;
   }
 }
 
@@ -177,7 +175,7 @@ fail:
 }
 
 size_t
-spa_gauss_basic_cols(SPAMatrix e, size_t *basic_cols) {
+spa_gauss_basic_col_nums(SPAMatrix e, size_t *basic_cols_nums) {
 
   assert(e);
 
@@ -188,14 +186,14 @@ spa_gauss_basic_cols(SPAMatrix e, size_t *basic_cols) {
       if (fabs(spa_mat_get(e, i, j)) < ZERO_EPS)
         continue;
       else {
-        basic_cols[i_cols++] = j;
+        basic_cols_nums[i_cols++] = j;
         break;
       }
     }
   }
 
   if (i_cols < e->n_cols - 1)
-    basic_cols[i_cols] = 0;
+    basic_cols_nums[i_cols] = 0;
 
   return i_cols;
 }
