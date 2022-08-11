@@ -18,13 +18,13 @@ main(void) {
   SPAMatrix e = NULL;
   spa_mat_new_copy(&e, a);
 
-  spa_gauss_reduce(e, spa_mat_pivot_zero_exch);
+  spa_gauss_elim(e, spa_mat_prow_exch_zero);
 
   puts("E=");
   spa_mat_print(e);
 
   size_t *basic_cols   = malloc(n_cols * sizeof(size_t));
-  size_t  n_basic_cols = spa_gauss_basic_cols(e, basic_cols);
+  size_t  n_basic_cols = spa_gauss_basic_col_nums(e, basic_cols);
   printf("A has %zu basic columns. ", n_basic_cols);
   printf("The basic column numbers of A: ");
   size_t i = 0;
