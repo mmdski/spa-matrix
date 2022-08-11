@@ -181,15 +181,10 @@ spa_gauss_basic_col_nums(SPAMatrix e, size_t *basic_cols_nums) {
 
   size_t i_cols = 0;
 
-  for (size_t i = 1; i <= e->n_rows; ++i) {
-    for (size_t j = 1; j <= e->n_cols; ++j) {
-      if (fabs(spa_mat_get(e, i, j)) < ZERO_EPS)
-        continue;
-      else {
-        basic_cols_nums[i_cols++] = j;
-        break;
-      }
-    }
+  for (size_t i = 1, j = 1; i <= e->n_rows && j <= e->n_cols; ++i) {
+    while (fabs(spa_mat_get(e, i, j)) < ZERO_EPS)
+      ++j;
+    basic_cols_nums[i_cols++] = j;
   }
 
   if (i_cols < e->n_cols - 1)
