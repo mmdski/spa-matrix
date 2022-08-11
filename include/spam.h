@@ -163,6 +163,21 @@ extern void spa_mat_free(SPAMatrix *m_ptr);
 extern void spa_mat_copy(SPAMatrix a, SPAMatrix b);
 
 /**
+ * @brief Concatenates columns of two matrices and store the values in an
+ * existing matrix
+ *
+ * @details
+ * Concatenates the columns of @p a and @p b and stores them in @p ab. The
+ * number of rows among all matrices must be equal. The number of columns in @p
+ * ab must be equal to the sum of the number of columns in @p a and @p b.
+ *
+ * @param ab a matrix which stores the concat result
+ * @param a left matrix
+ * @param b right matrix
+ */
+extern void spa_mat_colcat(SPAMatrix ab, SPAMatrix a, SPAMatrix b);
+
+/**
  * @brief Tests if two matrices are equal
  *
  * @param a a matrix

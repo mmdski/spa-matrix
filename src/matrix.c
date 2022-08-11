@@ -138,15 +138,7 @@ spa_mat_new_colcat(SPAMatrix *m_ptr, SPAMatrix a, SPAMatrix b) {
   if (new_status == SPA_MEM_ERROR)
     return new_status;
 
-  for (size_t i = 1; i <= a->n_rows; ++i) {
-
-    for (size_t j = 1; j <= a->n_cols; ++j)
-      (*m_ptr)->elements[MAT_INDEX(total_columns, i, j)] = spa_mat_get(a, i, j);
-
-    for (size_t j = 1; j <= b->n_cols; ++j)
-      (*m_ptr)->elements[MAT_INDEX(total_columns, i, j + a->n_cols)] =
-          spa_mat_get(b, i, j);
-  }
+  spa_mat_colcat(*m_ptr, a, b);
 
   return SPA_NO_ERROR;
 }
@@ -169,6 +161,27 @@ spa_mat_copy(SPAMatrix a, SPAMatrix b) {
 
   for (size_t i = 0; i < a->n_rows * a->n_cols; ++i)
     a->elements[i] = b->elements[i];
+}
+
+void
+spa_mat_colcat(SPAMatrix ab, SPAMatrix a, SPAMatrix b) {
+
+  assert(ab && a && b);
+
+  assert(ab->n_cols == (a->n_cols + b->n_cols));
+  assert((ab->n_rows == a->n_rows) && (ab->n_rows == b->n_rows));
+
+  size_t total_columns = a->n_cols + b->n_cols;
+
+  for (size_t i = 1; i <= a->n_rows; ++i) {
+
+    for (size_t j = 1; j <= a->n_cols; ++j)
+      ab->elements[MAT_INDEX(total_columns, i, j)] = spa_mat_get(a, i, j);
+
+    for (size_t j = 1; j <= b->n_cols; ++j)
+      ab->elements[MAT_INDEX(total_columns, i, j + a->n_cols)] =
+          spa_mat_get(b, i, j);
+  }
 }
 
 bool
