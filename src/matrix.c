@@ -292,6 +292,34 @@ spa_mat_row_exch(SPAMatrix a, size_t i1, size_t i2) {
 }
 
 void
+spa_mat_row_scale(SPAMatrix a) {
+
+  assert(a);
+
+  double abs_row_value;
+  double abs_max_row_value;
+
+  // find the number of columns to find the absolute maximum value in
+  // n_cols is the minimum of the number of rows and the number of columns
+  size_t n_cols = a->n_rows <= a->n_cols ? a->n_rows : a->n_cols;
+
+  for (size_t i = 1; i <= a->n_rows; ++i) {
+
+    abs_max_row_value = fabs(spa_mat_get(a, i, 1));
+
+    for (size_t j = 2; j <= n_cols; ++j) {
+
+      abs_row_value = spa_mat_get(a, i, j);
+
+      if (abs_row_value > abs_max_row_value)
+        abs_max_row_value = abs_row_value;
+    }
+
+    spa_mat_row_mult(a, i, 1. / abs_max_row_value);
+  }
+}
+
+void
 spa_mat_prow_exch_no(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
   (void) a;
   (void) pivot_row;

@@ -246,6 +246,17 @@ extern void spa_mat_row_mult(SPAMatrix a, size_t i, double c);
 extern void spa_mat_row_exch(SPAMatrix a, size_t i1, size_t i2);
 
 /**
+ * @brief Row scale a matrix
+ *
+ * @details
+ * Scales rows in @p a by the absolute maximum value in the first min(m, n)
+ * columns, where m is the number of rows and n is the number of columns.
+ *
+ * @param a a matrix
+ */
+extern void spa_mat_row_scale(SPAMatrix a);
+
+/**
  * @brief Dummy pivot row exchange function
  *
  * @param a a matrix
