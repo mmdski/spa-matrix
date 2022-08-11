@@ -175,20 +175,27 @@ fail:
 }
 
 size_t
-spa_gauss_basic_col_nums(SPAMatrix e, size_t *basic_cols_nums) {
+spa_gauss_basic_col_nums(SPAMatrix e, size_t *basic_col_nums) {
 
   assert(e);
 
   size_t i_cols = 0;
 
   for (size_t i = 1, j = 1; i <= e->n_rows && j <= e->n_cols; ++i) {
-    while (fabs(spa_mat_get(e, i, j)) < ZERO_EPS)
+    while (fabs(spa_mat_get(e, i, j)) < ZERO_EPS) {
       ++j;
-    basic_cols_nums[i_cols++] = j;
+      if (j > e->n_cols)
+        goto exit;
+    }
+    basic_col_nums[i_cols++] = j;
   }
 
+exit:
+
+  // if the number of columns is less than the total number of columns in the
+  // matrix, set the last entry in basic_col_nums to zero
   if (i_cols < e->n_cols - 1)
-    basic_cols_nums[i_cols] = 0;
+    basic_col_nums[i_cols] = 0;
 
   return i_cols;
 }
