@@ -307,7 +307,7 @@ spa_mat_pivot_zero_exch(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
 
   size_t i;
   for (i = pivot_row; i <= a->n_rows; ++i) {
-    if (a->elements[MAT_INDEX(a->n_cols, i, pivot_col)] == 0)
+    if (a->elements[MAT_INDEX(a->n_cols, i, pivot_col)] != 0)
       break;
   }
 
