@@ -197,9 +197,14 @@ spa_mat_print(SPAMatrix a) {
 
   assert(a);
 
+  double element;
+
   for (size_t i = 1; i <= a->n_rows; ++i) {
     for (size_t j = 1; j <= a->n_cols; ++j) {
-      printf("%10g", a->elements[MAT_INDEX(a->n_cols, i, j)]);
+      element = a->elements[MAT_INDEX(a->n_cols, i, j)];
+      if (fabs(element) < ZERO_EPS)
+        element = 0;
+      printf("%10g", element);
     }
     printf("\n");
   }

@@ -3,6 +3,8 @@
 
 #include <stdlib.h>
 
+#define ZERO_EPS 1e-10
+
 #define MAT_INDEX(n_cols, row, col) ((row - 1) * n_cols + (col - 1))
 
 /**

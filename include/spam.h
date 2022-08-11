@@ -326,4 +326,20 @@ extern int spa_gauss_solve(SPAMatrix        a,
                            SPAMatrix       *x_ptr,
                            SPAPivotExchFunc pivot_exch_func);
 
+/**
+ * @brief Returns the number of basic columns in a Gauss-reduced matrix and
+ * fills the basic column numbers in an array
+ *
+ * @details
+ * @p basic_cols must be previously allocated. The size of @p basic_cols must be
+ * equal to the number of columns in @p e. If all columns in @p e are basic,
+ * then all column numbers will appear in @p basic_cols. Otherwise, a zero-value
+ * follows the final basic column number.
+ *
+ * @param e a Gauss-reduced matrix
+ * @param basic_cols an array of size_t
+ * @return the number of basic columns in @p e
+ */
+extern size_t spa_gauss_basic_cols(SPAMatrix e, size_t *basic_cols);
+
 #endif

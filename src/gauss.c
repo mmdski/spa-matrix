@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <math.h>
 #include <stdlib.h>
 
 #include <spam.h>
@@ -156,4 +157,28 @@ fail:
   spa_mat_free(&aug);
 
   return return_status;
+}
+
+size_t
+spa_gauss_basic_cols(SPAMatrix e, size_t *basic_cols) {
+
+  assert(e);
+
+  size_t i_cols = 0;
+
+  for (size_t i = 1; i <= e->n_rows; ++i) {
+    for (size_t j = 1; j <= e->n_cols; ++j) {
+      if (fabs(spa_mat_get(e, i, j)) < ZERO_EPS)
+        continue;
+      else {
+        basic_cols[i_cols++] = j;
+        break;
+      }
+    }
+  }
+
+  if (i_cols < e->n_cols - 1)
+    basic_cols[i_cols] = 0;
+
+  return i_cols;
 }

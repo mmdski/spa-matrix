@@ -25,5 +25,6 @@ macro(add_spam_test basename)
   endif()
 endmacro()
 
+add_spam_test(example_test)
 add_spam_test(fl_test)
 add_spam_test(matrix_test)
