@@ -288,21 +288,38 @@ extern void
 spa_mat_prow_exch_max(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 
 /**
- * @brief Reduce a matrix using the Gauss reduction method
+ * @brief Performs a single step in Gaussian elimination
+ *
+ * @details
+ * The elimination step is attempted at the pivot position defined by @p
+ * pivot_row and @p pivot_col. If elimination succeeds, the function returns @c
+ * true. If the pivot position contains a zero, the function returns @c false.
  *
  * @param a a matrix
- * @param pivot_exch_func a matrix pivot exchange function
+ * @param pivot_row pivot row number
+ * @param pivot_col pivot column number
+ * @return true if elimination step succeeds
+ * @return false if elimination step fails
  */
-extern void spa_gauss_reduce(SPAMatrix a, SPAPivotExchFunc pivot_exch_func);
+extern bool
+spa_gauss_elim_step(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 
 /**
- * @brief Reduce a matrix using the Gauss-Jordan reduction method
+ * @brief Reduce a matrix using the Gauss elimination method
  *
  * @param a a matrix
  * @param pivot_exch_func a matrix pivot exchange function
  */
-extern void spa_gauss_jordan_reduce(SPAMatrix        a,
-                                    SPAPivotExchFunc pivot_exch_func);
+extern void spa_gauss_elim(SPAMatrix a, SPAPivotExchFunc pivot_exch_func);
+
+/**
+ * @brief Reduce a matrix using the Gauss-Jordan elimination method
+ *
+ * @param a a matrix
+ * @param pivot_exch_func a matrix pivot exchange function
+ */
+extern void spa_gauss_jordan_elim(SPAMatrix        a,
+                                  SPAPivotExchFunc pivot_exch_func);
 
 /**
  * @brief Solve for x by back substitution
@@ -319,7 +336,7 @@ extern void spa_gauss_jordan_reduce(SPAMatrix        a,
 extern void spa_gauss_back_sub(SPAMatrix g_reduced, SPAMatrix x);
 
 /**
- * @brief Solves a system of equations using Gauss reduction and back
+ * @brief Solves a system of equations using Gaussian elimination and back
  * substitution
  *
  * @details
