@@ -1,8 +1,12 @@
+add_spam_exe(equation2.4.1)
+
 add_spam_exe(example2.1.1)
 add_spam_exe(example2.1.2)
 add_spam_exe(example2.2.1)
 add_spam_exe(example2.2.2)
 add_spam_exe(example2.3.1)
+add_spam_exe(example2.4.1)
+add_spam_exe(example2.4.2)
 
 add_spam_exe(problem2.1.1a)
 add_spam_exe(problem2.1.1b)
