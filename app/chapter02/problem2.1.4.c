@@ -27,7 +27,7 @@ main(void) {
   // "exact" arithmetic
   spa_mat_copy(e, a);
   spa_gauss_elim(e, spa_mat_prow_exch_max);
-  n_basic_cols = spa_gauss_basic_col_nums(e, basic_col_nums);
+  n_basic_cols = spa_gauss_basic_col_nos(e, basic_col_nums);
   printf("(a) The rank of A using \"exact\" arithmetic is %zu.\n",
          n_basic_cols);
 
@@ -35,7 +35,7 @@ main(void) {
   spa_precision_set(3);
   spa_mat_copy(e, a);
   spa_gauss_elim(e, spa_mat_prow_exch_no);
-  n_basic_cols = spa_gauss_basic_col_nums(e, basic_col_nums);
+  n_basic_cols = spa_gauss_basic_col_nos(e, basic_col_nums);
   printf("(b) The rank of A using 3-digit arithmetic and no pivoting is %zu.\n",
          n_basic_cols);
 
@@ -43,7 +43,7 @@ main(void) {
   spa_precision_set(3);
   spa_mat_copy(e, a);
   spa_gauss_elim(e, spa_mat_prow_exch_max);
-  n_basic_cols = spa_gauss_basic_col_nums(e, basic_col_nums);
+  n_basic_cols = spa_gauss_basic_col_nos(e, basic_col_nums);
   printf("(b) The rank of A using 3-digit arithmetic and pivoting is %zu.\n",
          n_basic_cols);
 

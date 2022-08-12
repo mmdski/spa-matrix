@@ -175,7 +175,7 @@ fail:
 }
 
 size_t
-spa_gauss_basic_col_nums(SPAMatrix e, size_t *basic_col_nums) {
+spa_gauss_basic_col_nos(SPAMatrix e, size_t *basic_col_nums) {
 
   assert(e);
 
@@ -187,14 +187,16 @@ spa_gauss_basic_col_nums(SPAMatrix e, size_t *basic_col_nums) {
       if (j > e->n_cols)
         goto exit;
     }
-    basic_col_nums[i_cols++] = j;
+    i_cols++;
+    if (basic_col_nums)
+      basic_col_nums[i_cols] = j;
   }
 
 exit:
 
   // if the number of columns is less than the total number of columns in the
   // matrix, set the last entry in basic_col_nums to zero
-  if (i_cols < e->n_cols - 1)
+  if ((i_cols < e->n_cols - 1) && basic_col_nums)
     basic_col_nums[i_cols] = 0;
 
   return i_cols;

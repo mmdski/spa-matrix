@@ -21,7 +21,7 @@ TEST(Chapter2Examples, BasicColumnsExample) {
   spa_gauss_elim(e, spa_mat_prow_exch_zero);
 
   size_t *basic_cols   = (size_t *) malloc(n_cols * sizeof(size_t));
-  size_t  n_basic_cols = spa_gauss_basic_col_nums(e, basic_cols);
+  size_t  n_basic_cols = spa_gauss_basic_col_nos(e, basic_cols);
 
   ASSERT_EQ(n_basic_cols, 2);
 

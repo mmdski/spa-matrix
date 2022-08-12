@@ -26,7 +26,7 @@ main(void) {
   spa_mat_print(e);
 
   size_t basic_col_nums[5];
-  size_t n_basic_cols = spa_gauss_basic_col_nums(e, basic_col_nums);
+  size_t n_basic_cols = spa_gauss_basic_col_nos(e, basic_col_nums);
 
   printf("The rank of A is %zu. The basic column numbers of A are ",
          n_basic_cols);

@@ -32,7 +32,7 @@ main(void) {
   spa_mat_print(aug);
 
   size_t basic_col_nums[5];
-  size_t n_basic_cols = spa_gauss_basic_col_nums(aug, basic_col_nums);
+  size_t n_basic_cols = spa_gauss_basic_col_nos(aug, basic_col_nums);
 
   // determine if the system is inconsistent by checking the last basic column
   // number in the augmented matrix

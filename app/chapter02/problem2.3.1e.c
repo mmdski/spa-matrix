@@ -33,7 +33,7 @@ main(void) {
   spa_mat_print(aug);
 
   size_t basic_col_nums[5];
-  size_t n_basic_cols = spa_gauss_basic_col_nums(aug, basic_col_nums);
+  size_t n_basic_cols = spa_gauss_basic_col_nos(aug, basic_col_nums);
   if (basic_col_nums[n_basic_cols - 1] == 5)
     puts("The system is not consistent.");
   else

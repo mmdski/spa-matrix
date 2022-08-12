@@ -34,7 +34,7 @@ main(void) {
   puts("(a) A|b reduced (5-digit arithmetic) = ");
   spa_mat_print(ab);
 
-  n_basic_cols = spa_gauss_basic_col_nums(ab, basic_col_nums);
+  n_basic_cols = spa_gauss_basic_col_nos(ab, basic_col_nums);
   if (basic_col_nums[n_basic_cols - 1] == ab_size.n_cols)
     printf("The system is not consistent\n");
   else
@@ -46,7 +46,7 @@ main(void) {
   puts("(b) A|b reduced (6-digit arithmetic) = ");
   spa_mat_print(ab);
 
-  n_basic_cols = spa_gauss_basic_col_nums(ab, basic_col_nums);
+  n_basic_cols = spa_gauss_basic_col_nos(ab, basic_col_nums);
   if (basic_col_nums[n_basic_cols - 1] == ab_size.n_cols)
     printf("The system is not consistent\n");
   else

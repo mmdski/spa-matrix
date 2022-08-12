@@ -384,15 +384,16 @@ extern int spa_gauss_solve(SPAMatrix        a,
  * fills the basic column numbers in an array
  *
  * @details
- * @p basic_cols must be previously allocated. The size of @p basic_col_nums
- * must be equal to the number of columns in @p e. If all columns in @p e are
- * basic, then all column numbers will appear in @p basic_col_nums. Otherwise, a
- * zero-value follows the final basic column number.
+ * @p basic_col_nos may be @c NULL and the column numbers will not be filled. If
+ * @p basic_col_nos is not @c NULL, it must be previously allocated. The size of
+ * @p basic_col_nos must be equal to the number of columns in @p e. If all
+ * columns in @p e are basic, then all column numbers will appear in @p
+ * basic_col_nos. Otherwise, a zero-value follows the final basic column number.
  *
  * @param e a Gauss-reduced matrix
- * @param basic_col_nums a size_t array
+ * @param basic_col_nos a size_t array
  * @return the number of basic columns in @p e
  */
-extern size_t spa_gauss_basic_col_nums(SPAMatrix e, size_t *basic_col_nums);
+extern size_t spa_gauss_basic_col_nos(SPAMatrix e, size_t *basic_col_nos);
 
 #endif
