@@ -5,5 +5,5 @@ add_library(spam
 
 macro(add_spam_exe basename)
   add_executable(${basename} ${basename}.c)
-  target_link_libraries(${basename} spam)
+  target_link_libraries(${basename} spam m)
 endmacro()
