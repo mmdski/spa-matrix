@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,11 +9,12 @@ main(void) {
 
   // clang-format off
   SPAMatrix a = NULL;
-  spa_mat_new_arr(&a, (double[]) {
-    1, 2, 2,
-    2, 5, 7,
-    3, 6, 6
-  }, 3, 3);
+  spa_mat_new_arr(&a, (double[]){
+    1, 1, 2, 0,
+    3, 0, 3, 3,
+    2, 1, 3, 1,
+    1, 2, 3, -1
+  }, 4, 4);
   // clang-format on
 
   puts("A=");
@@ -47,16 +49,7 @@ main(void) {
 
     SPAMatrix part_solns = NULL;
     spa_mat_new_zeros(&part_solns, a_size.n_cols, n_free_cols);
-    double value;
-    size_t free_col;
-    for (size_t i_free_col = 0; i_free_col < n_free_cols; ++i_free_col) {
-      free_col = free_col_nos[i_free_col];
-      spa_mat_set(part_solns, free_col, i_free_col + 1, 1);
-      for (size_t i = 1; i < free_col; ++i) {
-        value = -spa_mat_get(a, i, free_col);
-        spa_mat_set(part_solns, i, i_free_col + 1, value);
-      }
-    }
+    spa_gauss_part_solns(part_solns, a, free_col_nos);
 
     puts("The particular solution vectors to Ax=0 are");
     spa_mat_print(part_solns);
