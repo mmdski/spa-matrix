@@ -313,6 +313,21 @@ extern void
 spa_mat_prow_exch_max(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 
 /**
+ * @brief Extracts columns from a matrix
+ *
+ * @details
+ * The column numbers specified by the values in @p col_nos will be filled in @p
+ * cols. @p must be a previously allocated, appropriately sized matrix. The
+ * number of columns to fill are specified by the number of columns in the
+ * matrix @p cols.
+ *
+ * @param cols
+ * @param a
+ * @param col_nos
+ */
+extern void spa_mat_col_extract(SPAMatrix cols, SPAMatrix a, size_t *col_nos);
+
+/**
  * @brief Performs a single step in Gaussian elimination
  *
  * @details
@@ -395,5 +410,30 @@ extern int spa_gauss_solve(SPAMatrix        a,
  * @return the number of basic columns in @p e
  */
 extern size_t spa_gauss_basic_col_nos(SPAMatrix e, size_t *basic_col_nos);
+
+/**
+ * @brief Fills an array with the free column numbers of a matrix
+ *
+ * @details
+ * @p free_col_nos must be previously allocated and must be the size of the
+ * number of free columns in the matrix.
+ *
+ * @param free_col_nos array to be filled with the free column numbers
+ * @param n_free_cols the number of free columns
+ * @param basic_col_nos an array containing the basic column numbers
+ */
+extern void spa_gauss_free_col_nos(size_t *free_col_nos,
+                                   size_t  n_free_cols,
+                                   size_t *basic_col_nos);
+
+/**
+ * @brief Fills particular solution vectors in the columns of a matrix
+ *
+ * @param part_solns matrix to be filled with particular solution column vectors
+ * @param e_a Gauss-Jordan reduced matrix
+ * @param free_col_nos free column numbers of e_a
+ */
+extern void
+spa_gauss_part_solns(SPAMatrix part_solns, SPAMatrix e_a, size_t *free_col_nos);
 
 #endif

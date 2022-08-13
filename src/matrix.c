@@ -386,3 +386,20 @@ spa_mat_prow_exch_max(SPAMatrix a, size_t pivot_row, size_t pivot_col) {
 
   spa_mat_row_exch(a, pivot_row, max_row);
 }
+
+void
+spa_mat_col_extract(SPAMatrix cols, SPAMatrix a, size_t *col_nos) {
+
+  assert(cols && a && col_nos);
+  assert(cols->n_rows == a->n_rows);
+  assert(cols->n_cols <= a->n_cols);
+
+  double value;
+
+  for (size_t j = 1; j <= cols->n_cols; ++j) {
+    for (size_t i = 1; i <= cols->n_rows; ++i) {
+      value = spa_mat_get(a, i, col_nos[j - 1]);
+      spa_mat_set(cols, i, j, value);
+    }
+  }
+}

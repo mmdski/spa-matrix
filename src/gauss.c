@@ -187,9 +187,10 @@ spa_gauss_basic_col_nos(SPAMatrix e, size_t *basic_col_nums) {
       if (j > e->n_cols)
         goto exit;
     }
-    i_cols++;
-    if (basic_col_nums)
+    if (basic_col_nums) {
       basic_col_nums[i_cols] = j;
+    }
+    i_cols++;
   }
 
 exit:
@@ -200,4 +201,42 @@ exit:
     basic_col_nums[i_cols] = 0;
 
   return i_cols;
+}
+
+void
+spa_gauss_free_col_nos(size_t *free_col_nos,
+                       size_t  n_free_cols,
+                       size_t *basic_col_nos) {
+
+  size_t free_col_no = 1;
+  size_t i_free      = 0;
+  size_t i_basic     = 0;
+  while (i_free < n_free_cols) {
+    while (free_col_no == basic_col_nos[i_basic]) {
+      free_col_no++;
+      i_basic++;
+    }
+    free_col_nos[i_free++] = free_col_no++;
+  }
+}
+
+void
+spa_gauss_part_solns(SPAMatrix part_solns,
+                     SPAMatrix e_a,
+                     size_t   *free_col_nos) {
+
+  double        value;
+  SPAMatrixSize soln_size   = spa_mat_size(part_solns);
+  size_t        n_free_cols = soln_size.n_cols;
+
+  for (size_t free_col, i_free = 0; i_free < n_free_cols; ++i_free) {
+
+    free_col = free_col_nos[i_free];
+    spa_mat_set(part_solns, free_col, i_free + 1, 1);
+
+    for (size_t i = 1; i < free_col; ++i) {
+      value = -spa_mat_get(e_a, i, free_col);
+      spa_mat_set(part_solns, i, i_free + 1, value);
+    }
+  }
 }
