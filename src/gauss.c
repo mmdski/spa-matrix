@@ -225,18 +225,45 @@ spa_gauss_part_solns(SPAMatrix part_solns,
                      SPAMatrix e_a,
                      size_t   *free_col_nos) {
 
-  double        value;
-  SPAMatrixSize soln_size   = spa_mat_size(part_solns);
-  size_t        n_free_cols = soln_size.n_cols;
+  SPAMatrixSize soln_size = spa_mat_size(part_solns);
 
-  for (size_t free_col, i_free = 0; i_free < n_free_cols; ++i_free) {
+  size_t col_free_var; // free variable of the column
+  size_t i_free_var;   // free variable index
+  size_t e_a_row_no;   // row number in gauss-jordan reduced matrix
+  double value;        // value to fill particular solution
 
-    free_col = free_col_nos[i_free];
-    spa_mat_set(part_solns, free_col, i_free + 1, 1);
+  // loop over columns in the partial solution matrix
+  for (size_t j_h = 1; j_h <= soln_size.n_cols; ++j_h) {
+    col_free_var = free_col_nos[j_h - 1];
+    i_free_var   = 0;
+    e_a_row_no   = 1;
 
-    for (size_t i = 1; i < free_col; ++i) {
-      value = -spa_mat_get(e_a, i, free_col);
-      spa_mat_set(part_solns, i, i_free + 1, value);
+    for (size_t i_h = 1; i_h <= soln_size.n_rows; ++i_h) {
+
+      // set the element to 1 if the row is equal to the free variable number of
+      // the column
+      if (i_h == col_free_var) {
+        value = 1;
+      }
+
+      // set the element to zero if the row is greater than the free variable
+      // number of the column
+      else if (i_h > col_free_var) {
+        value = 0;
+      }
+
+      // if the current row number is equal to another free variable value, set
+      // element to zero
+      else if (i_h == free_col_nos[i_free_var]) {
+        i_free_var++;
+        value = 0;
+      }
+
+      else {
+        value = -spa_mat_get(e_a, e_a_row_no++, col_free_var);
+      }
+
+      spa_mat_set(part_solns, i_h, j_h, value);
     }
   }
 }

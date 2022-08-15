@@ -47,7 +47,7 @@ main(void) {
     puts("");
 
     SPAMatrix part_solns = NULL;
-    spa_mat_new_zeros(&part_solns, a_size.n_cols, n_free_cols);
+    spa_mat_new(&part_solns, a_size.n_cols, n_free_cols);
     spa_gauss_part_solns(part_solns, a, free_col_nos);
 
     puts("The particular solution vectors to Ax=0 are");
