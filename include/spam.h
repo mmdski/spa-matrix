@@ -328,6 +328,33 @@ spa_mat_prow_exch_max(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 extern void spa_mat_col_extract(SPAMatrix cols, SPAMatrix a, size_t *col_nos);
 
 /**
+ * @brief Multiplies a matrix by a scalar
+ *
+ * @details
+ * @p b must be a previously allocated SPAMatrix. The size of @p b must be equal
+ * to the size of @p a.
+ *
+ * @param b product of scalar and matrix
+ * @param c a scalar
+ * @param a a matrix
+ */
+extern void spa_mat_scalar_mult(SPAMatrix b, double c, SPAMatrix a);
+
+/**
+ * @brief Multiplies two matrices
+ *
+ * @details
+ * @p b must be a previously allocated SPAMatrix. The number of rows in @p b
+ * must be equal to the number of rows in @p a. The number of columns in @p b
+ * must be equal to the number of columns in @p x.
+ *
+ * @param b product of @p a and @p x
+ * @param a left matrix in product
+ * @param x right matrix in product
+ */
+extern void spa_mat_matrix_mult(SPAMatrix b, SPAMatrix a, SPAMatrix x);
+
+/**
  * @brief Performs a single step in Gaussian elimination
  *
  * @details

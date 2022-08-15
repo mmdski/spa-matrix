@@ -403,3 +403,40 @@ spa_mat_col_extract(SPAMatrix cols, SPAMatrix a, size_t *col_nos) {
     }
   }
 }
+
+void
+spa_mat_scalar_mult(SPAMatrix b, double c, SPAMatrix a) {
+
+  assert(b && a);
+  assert(b->n_rows == a->n_rows);
+  assert(b->n_cols == a->n_cols);
+
+  double prod;
+  for (size_t i = 1; i <= a->n_rows; ++i) {
+    for (size_t j = 1; j <= a->n_cols; ++j) {
+      prod = c * spa_mat_get(a, i, j);
+      spa_mat_set(b, i, j, prod);
+    }
+  }
+}
+
+void
+spa_mat_matrix_mult(SPAMatrix b, SPAMatrix a, SPAMatrix x) {
+
+  assert(a && b && x);
+  assert(a->n_cols == x->n_rows);
+  assert(b->n_rows == a->n_rows);
+  assert(b->n_cols == x->n_cols);
+
+  double sum;
+
+  for (size_t i = 1; i <= a->n_rows; ++i) {
+    for (size_t j = 1; j <= x->n_cols; ++j) {
+      sum = 0;
+      for (size_t k = 1; k <= a->n_cols; ++k) {
+        sum += spa_mat_get(a, i, k) * spa_mat_get(x, k, j);
+      }
+      spa_mat_set(b, i, j, sum);
+    }
+  }
+}
