@@ -208,6 +208,8 @@ spa_gauss_free_col_nos(size_t *free_col_nos,
                        size_t  n_free_cols,
                        size_t *basic_col_nos) {
 
+  assert(free_col_nos && basic_col_nos);
+
   size_t free_col_no = 1;
   size_t i_free      = 0;
   size_t i_basic     = 0;
@@ -222,19 +224,44 @@ spa_gauss_free_col_nos(size_t *free_col_nos,
 
 void
 spa_gauss_part_solns(SPAMatrix part_solns,
-                     SPAMatrix e_a,
+                     SPAMatrix e_c,
                      size_t   *free_col_nos) {
 
+  assert(part_solns && e_c && free_col_nos);
+  assert(part_solns->n_rows == e_c->n_cols - 1);
+
   SPAMatrixSize soln_size = spa_mat_size(part_solns);
+  SPAMatrixSize e_c_size  = spa_mat_size(e_c);
 
-  size_t col_free_var; // free variable of the column
-  size_t i_free_var;   // free variable index
-  size_t e_a_row_no;   // row number in gauss-jordan reduced matrix
-  double value;        // value to fill particular solution
+  // the system must be consistent. the result vector c must be a free column.
+  assert(e_c_size.n_cols == free_col_nos[soln_size.n_cols - 1]);
 
-  // loop over columns in the partial solution matrix
-  for (size_t j_h = 1; j_h <= soln_size.n_cols; ++j_h) {
-    col_free_var = free_col_nos[j_h - 1];
+  double value; // value to fill particular solution
+
+  // loop over the first column in the particular solutions matrix. this column
+  // will contain the trivial solution if e_c is a homogeneous system
+  for (size_t i_free_var = 0, e_a_row_no = 1, i_h = 1, j_h = 1;
+       i_h <= soln_size.n_rows;
+       ++i_h) {
+
+    if (i_h == free_col_nos[i_free_var]) {
+      value = 0;
+      i_free_var++;
+    } else {
+      (void) e_c_size;
+      value = spa_mat_get(e_c, e_a_row_no, e_c_size.n_cols);
+      // value = NAN;
+      e_a_row_no++;
+    }
+
+    spa_mat_set(part_solns, i_h, j_h, value);
+  }
+
+  // loop over the rest of the columns in the particular solution matrix
+  for (size_t i_free_var, col_free_var, e_a_row_no, j_h = 2;
+       j_h <= soln_size.n_cols;
+       ++j_h) {
+    col_free_var = free_col_nos[j_h - 2];
     i_free_var   = 0;
     e_a_row_no   = 1;
 
@@ -260,7 +287,7 @@ spa_gauss_part_solns(SPAMatrix part_solns,
       }
 
       else {
-        value = -spa_mat_get(e_a, e_a_row_no++, col_free_var);
+        value = -spa_mat_get(e_c, e_a_row_no++, col_free_var);
       }
 
       spa_mat_set(part_solns, i_h, j_h, value);

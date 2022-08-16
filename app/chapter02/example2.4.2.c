@@ -7,26 +7,26 @@ int
 main(void) {
 
   // clang-format off
-  SPAMatrix a = NULL;
-  spa_mat_new_arr(&a, (double[]) {
-    1, 2, 2,
-    2, 5, 7,
-    3, 6, 6
-  }, 3, 3);
+  SPAMatrix a_b = NULL;
+  spa_mat_new_arr(&a_b, (double[]) {
+    1, 2, 2, 0,
+    2, 5, 7, 0,
+    3, 6, 6, 0
+  }, 3, 4);
   // clang-format on
 
-  puts("A=");
-  spa_mat_print(a);
+  puts("[A|0]=");
+  spa_mat_print(a_b);
 
-  spa_gauss_jordan_elim(a, spa_mat_prow_exch_max);
-  puts("E_A=");
-  spa_mat_print(a);
+  spa_gauss_jordan_elim(a_b, spa_mat_prow_exch_max);
+  puts("[E_A|0]=");
+  spa_mat_print(a_b);
 
-  SPAMatrixSize a_size        = spa_mat_size(a);
+  SPAMatrixSize a_size        = spa_mat_size(a_b);
   size_t       *basic_col_nos = malloc(a_size.n_cols * sizeof(size_t));
-  size_t        n_basic_cols  = spa_gauss_basic_col_nos(a, basic_col_nos);
+  size_t        n_basic_cols  = spa_gauss_basic_col_nos(a_b, basic_col_nos);
 
-  puts("The basic column numbers of A are");
+  puts("The basic column numbers of [A|0] are");
   for (size_t i = 0; i < n_basic_cols; ++i)
     printf("%zu ", basic_col_nos[i]);
   puts("");
@@ -40,23 +40,14 @@ main(void) {
 
     spa_gauss_free_col_nos(free_col_nos, n_free_cols, basic_col_nos);
 
-    puts("The free column numbers of A are:");
+    puts("The free column numbers of [A|0] are:");
     for (size_t i = 0; i < n_free_cols; ++i)
       printf("%zu ", free_col_nos[i]);
     puts("");
 
     SPAMatrix part_solns = NULL;
-    spa_mat_new_zeros(&part_solns, a_size.n_cols, n_free_cols);
-    double value;
-    size_t free_col;
-    for (size_t i_free_col = 0; i_free_col < n_free_cols; ++i_free_col) {
-      free_col = free_col_nos[i_free_col];
-      spa_mat_set(part_solns, free_col, i_free_col + 1, 1);
-      for (size_t i = 1; i < free_col; ++i) {
-        value = -spa_mat_get(a, i, free_col);
-        spa_mat_set(part_solns, i, i_free_col + 1, value);
-      }
-    }
+    spa_mat_new(&part_solns, a_size.n_cols - 1, n_free_cols);
+    spa_gauss_part_solns(part_solns, a_b, free_col_nos);
 
     puts("The particular solution vectors to Ax=0 are");
     spa_mat_print(part_solns);
@@ -66,7 +57,7 @@ main(void) {
 
   free(basic_col_nos);
 
-  spa_mat_free(&a);
+  spa_mat_free(&a_b);
 
   return EXIT_SUCCESS;
 }

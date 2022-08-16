@@ -456,11 +456,24 @@ extern void spa_gauss_free_col_nos(size_t *free_col_nos,
 /**
  * @brief Fills particular solution vectors in the columns of a matrix
  *
+ * @details
+ * @p e_c must be a Gauss-Jordan reduced matrix in the form of [E|c], where E is
+ * the reduced coefficient matrix and c is the reduced result vector.
+ *
+ * @p part_solns must be previously allocated. The number of columns in @p
+ * part_solns must be equal to the number of free columns in [E|c]. The number
+ * of rows in @p part_solns must be equal to the number of columns in E (which
+ * is the number of columns in [E|c] minus one).
+ *
+ * The first column of @p part_solns will be filled with the 0 vector if [E|c]
+ * is a homogeneous system. Otherwise, it will be filled with the particular
+ * solution of the nonhomogeneous system.
+ *
  * @param part_solns matrix to be filled with particular solution column vectors
- * @param e_a Gauss-Jordan reduced matrix
- * @param free_col_nos free column numbers of e_a
+ * @param e_c Gauss-Jordan reduced augmented matrix
+ * @param free_col_nos free column numbers of e_c
  */
 extern void
-spa_gauss_part_solns(SPAMatrix part_solns, SPAMatrix e_a, size_t *free_col_nos);
+spa_gauss_part_solns(SPAMatrix part_solns, SPAMatrix e_c, size_t *free_col_nos);
 
 #endif

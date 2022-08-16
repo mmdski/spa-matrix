@@ -8,33 +8,33 @@ int
 main(void) {
 
   // clang-format off
-  SPAMatrix a = NULL;
-  spa_mat_new_arr(&a, (double[]){
-    1, 1, 2, 0,
-    3, 0, 3, 3,
-    2, 1, 3, 1,
-    1, 2, 3, -1
-  }, 4, 4);
+  SPAMatrix a_b = NULL;
+  spa_mat_new_arr(&a_b, (double[]){
+    1, 1, 2,  0, 0,
+    3, 0, 3,  3, 0,
+    2, 1, 3,  1, 0,
+    1, 2, 3, -1, 0
+  }, 4, 5);
   // clang-format on
 
-  puts("A=");
-  spa_mat_print(a);
+  puts("[A|0]=");
+  spa_mat_print(a_b);
 
-  spa_gauss_jordan_elim(a, spa_mat_prow_exch_max);
-  puts("E_A=");
-  spa_mat_print(a);
+  spa_gauss_jordan_elim(a_b, spa_mat_prow_exch_max);
+  puts("[E_A|0]=");
+  spa_mat_print(a_b);
 
-  SPAMatrixSize a_size        = spa_mat_size(a);
+  SPAMatrixSize a_size        = spa_mat_size(a_b);
   size_t       *basic_col_nos = malloc(a_size.n_cols * sizeof(size_t));
-  size_t        n_basic_cols  = spa_gauss_basic_col_nos(a, basic_col_nos);
+  size_t        n_basic_cols  = spa_gauss_basic_col_nos(a_b, basic_col_nos);
 
-  puts("The basic column numbers of A are");
+  puts("The basic column numbers of [A|0] are");
   for (size_t i = 0; i < n_basic_cols; ++i)
     printf("%zu ", basic_col_nos[i]);
   puts("");
 
   size_t n_free_cols = a_size.n_cols - n_basic_cols;
-  printf("A has %zu free columns\n", n_free_cols);
+  printf("[A|0] has %zu free columns\n", n_free_cols);
 
   if (n_free_cols > 0) {
 
@@ -42,14 +42,14 @@ main(void) {
 
     spa_gauss_free_col_nos(free_col_nos, n_free_cols, basic_col_nos);
 
-    puts("The free column numbers of A are:");
+    puts("The free column numbers of [A|0] are:");
     for (size_t i = 0; i < n_free_cols; ++i)
       printf("%zu ", free_col_nos[i]);
     puts("");
 
     SPAMatrix part_solns = NULL;
-    spa_mat_new(&part_solns, a_size.n_cols, n_free_cols);
-    spa_gauss_part_solns(part_solns, a, free_col_nos);
+    spa_mat_new(&part_solns, a_size.n_cols - 1, n_free_cols);
+    spa_gauss_part_solns(part_solns, a_b, free_col_nos);
 
     puts("The particular solution vectors to Ax=0 are");
     spa_mat_print(part_solns);
@@ -59,7 +59,7 @@ main(void) {
 
   free(basic_col_nos);
 
-  spa_mat_free(&a);
+  spa_mat_free(&a_b);
 
   return EXIT_SUCCESS;
 }
