@@ -6,6 +6,7 @@
     "C_Cpp.codeAnalysis.exclude": {
         "build/_deps/googletest-*/": true
     },
+    "clang-tidy.buildPath": "build",
     "editor.tabSize": 2,
     "cmake.generator": "Ninja",
     "cmake.launchBehavior": "reuseTerminal",
