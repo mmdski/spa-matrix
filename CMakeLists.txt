@@ -88,9 +88,6 @@ include_directories(include)
 
 add_subdirectory(src)
 
-# build the files in the app subdirectory
-add_subdirectory(app)
-
 if(TESTS)
     message(STATUS "Building tests")
     include(FetchContent)
