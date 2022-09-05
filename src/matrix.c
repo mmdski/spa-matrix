@@ -408,6 +408,8 @@ void
 spa_mat_transpose(SPAMatrix b, SPAMatrix a) {
 
   assert(a && b);
+  assert(b->n_rows == a->n_cols);
+  assert(b->n_cols == a->n_rows);
 
   double aij;
   for (size_t i = 1; i <= a->n_rows; ++i) {
