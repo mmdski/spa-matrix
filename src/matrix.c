@@ -418,10 +418,6 @@ spa_mat_transpose(SPAMatrix b, SPAMatrix a) {
       spa_mat_set(b, j, i, aij);
     }
   }
-
-  size_t size_swap = a->n_rows;
-  a->n_rows        = a->n_cols;
-  a->n_cols        = size_swap;
 }
 
 void
