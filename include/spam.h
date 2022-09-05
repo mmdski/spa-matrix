@@ -328,6 +328,14 @@ spa_mat_prow_exch_max(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 extern void spa_mat_col_extract(SPAMatrix cols, SPAMatrix a, size_t *col_nos);
 
 /**
+ * @brief Transposes a matrix
+ *
+ * @param b
+ * @param a
+ */
+extern void spa_mat_transpose(SPAMatrix b, SPAMatrix a);
+
+/**
  * @brief Multiplies a matrix by a scalar
  *
  * @details

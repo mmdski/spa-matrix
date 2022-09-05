@@ -81,6 +81,36 @@ TEST(SPAMatrixTest, Size) {
   spa_mat_free(&b);
 }
 
+TEST(SPAMatrixTest, Transpose) {
+
+  // clang-format off
+  double values[] = {1, 2, 3, 4, 5,
+                     6, 7, 8, 9, 10};
+  double expected_values[] = {1, 6,
+                              2, 7,
+                              3, 8,
+                              4, 9,
+                              5, 10};
+  // clang-format on
+
+  SPAMatrix a = NULL;
+  spa_mat_new_arr(&a, values, 2, 5);
+
+  SPAMatrix b = NULL;
+  spa_mat_new(&b, 5, 2);
+
+  SPAMatrix expected = NULL;
+  spa_mat_new_arr(&expected, expected_values, 5, 2);
+
+  spa_mat_transpose(b, a);
+
+  ASSERT_TRUE(spa_mat_eq(b, expected));
+
+  spa_mat_free(&expected);
+  spa_mat_free(&b);
+  spa_mat_free(&a);
+}
+
 } // namespace
 
 int

@@ -405,6 +405,24 @@ spa_mat_col_extract(SPAMatrix cols, SPAMatrix a, size_t *col_nos) {
 }
 
 void
+spa_mat_transpose(SPAMatrix b, SPAMatrix a) {
+
+  assert(a && b);
+
+  double aij;
+  for (size_t i = 1; i <= a->n_rows; ++i) {
+    for (size_t j = 1; j <= a->n_cols; ++j) {
+      aij = spa_mat_get(a, i, j);
+      spa_mat_set(b, j, i, aij);
+    }
+  }
+
+  size_t size_swap = a->n_rows;
+  a->n_rows        = a->n_cols;
+  a->n_cols        = size_swap;
+}
+
+void
 spa_mat_scalar_mult(SPAMatrix b, double c, SPAMatrix a) {
 
   assert(b && a);
