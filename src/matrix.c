@@ -169,6 +169,8 @@ spa_mat_eye(SPAMatrix eye) {
   assert(eye);
   assert(eye->n_rows == eye->n_cols);
 
+  size_t n = eye->n_cols;
+
   for (size_t i = 1; i <= n; ++i) {
     for (size_t j = 1; j <= n; ++j) {
       if (i == j)
