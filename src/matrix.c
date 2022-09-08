@@ -164,6 +164,22 @@ spa_mat_copy(SPAMatrix a, SPAMatrix b) {
 }
 
 void
+spa_mat_eye(SPAMatrix eye) {
+
+  assert(eye);
+  assert(eye->n_rows == eye->n_cols);
+
+  for (size_t i = 1; i <= n; ++i) {
+    for (size_t j = 1; j <= n; ++j) {
+      if (i == j)
+        eye->elements[MAT_INDEX(n, i, j)] = 1;
+      else
+        eye->elements[MAT_INDEX(n, i, j)] = 0;
+    }
+  }
+}
+
+void
 spa_mat_colcat(SPAMatrix ab, SPAMatrix a, SPAMatrix b) {
 
   assert(ab && a && b);

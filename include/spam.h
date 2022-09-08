@@ -163,6 +163,16 @@ extern void spa_mat_free(SPAMatrix *m_ptr);
 extern void spa_mat_copy(SPAMatrix a, SPAMatrix b);
 
 /**
+ * @brief Sets a matrix to the identity matrix
+ *
+ * @details
+ * @p eye must be a square matrix.
+ *
+ * @param eye
+ */
+extern void spa_mat_eye(SPAMatrix eye);
+
+/**
  * @brief Concatenates columns of two matrices and store the values in an
  * existing matrix
  *
