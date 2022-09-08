@@ -1,24 +1,26 @@
 {
-    "files.associations": {
-        "*.h": "c",
-    },
-    "C_Cpp.errorSquiggles": "Enabled",
-    "C_Cpp.codeAnalysis.exclude": {
-        "build/_deps/googletest-*/": true
-    },
-    "clang-tidy.buildPath": "build",
-    "editor.tabSize": 2,
-    "cmake.generator": "Ninja",
-    "cmake.launchBehavior": "reuseTerminal",
-    "cmake.revealLog": "never",
-    "cmake.configureSettings": {
-        "TESTS": "1"
-    },
-    "cSpell.words": [
-        "colcat",
-        "elim",
-        "endmacro",
-        "soln",
-        "solns"
-    ]
+  "files.associations": {
+    "*.h": "c",
+  },
+  "C_Cpp.errorSquiggles": "Enabled",
+  "C_Cpp.codeAnalysis.exclude": {
+    "build/_deps/googletest-*/": true
+  },
+  "clang-tidy.buildPath": "build",
+  "editor.tabSize": 2,
+  "cmake.generator": "Ninja",
+  "cmake.launchBehavior": "reuseTerminal",
+  "cmake.revealLog": "never",
+  "cmake.configureSettings": {
+    "TESTS": "1"
+  },
+  "cSpell.words": [
+    "colcat",
+    "elim",
+    "endmacro",
+    "isclose",
+    "rtol",
+    "soln",
+    "solns"
+  ]
 }

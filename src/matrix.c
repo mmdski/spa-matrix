@@ -205,6 +205,31 @@ spa_mat_eq(SPAMatrix a, SPAMatrix b) {
   return true;
 }
 
+bool
+spa_mat_isclose(SPAMatrix a, SPAMatrix b, double rtol, double atol) {
+
+  assert(a && b);
+  assert((a->n_rows == b->n_rows) || (a->n_cols == b->n_cols));
+  assert(rtol > 0);
+  assert(atol >= 0);
+
+  if (a == b)
+    return true;
+
+  double a_ij, b_ij, abs_diff, max_tol;
+
+  for (size_t i = 0; i < a->n_rows * a->n_cols; ++i) {
+    a_ij     = a->elements[i];
+    b_ij     = b->elements[i];
+    abs_diff = fabs(a_ij - b_ij);
+    max_tol  = fmax(rtol * fmax(fabs(a_ij), fabs(b_ij)), atol);
+    if (abs_diff > max_tol)
+      return false;
+  }
+
+  return true;
+}
+
 SPAMatrixSize
 spa_mat_size(SPAMatrix a) {
 

@@ -188,6 +188,18 @@ extern void spa_mat_colcat(SPAMatrix ab, SPAMatrix a, SPAMatrix b);
 extern bool spa_mat_eq(SPAMatrix a, SPAMatrix b);
 
 /**
+ * @brief Tests if two matrices are approximately equal
+ *
+ * @param a a matrix
+ * @param b another matrix
+ * @param rtol relative tolerance
+ * @param atol absolute tolerance
+ * @return true if @p a and @p b are equal
+ * @return false if @p a and @p b are not equal
+ */
+extern bool spa_mat_isclose(SPAMatrix a, SPAMatrix b, double rtol, double atol);
+
+/**
  * @brief Returns the size of a matrix
  *
  * @param a a matrix
