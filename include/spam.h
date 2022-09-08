@@ -361,6 +361,24 @@ extern void spa_mat_transpose(SPAMatrix b, SPAMatrix a);
 extern void spa_mat_scalar_mult(SPAMatrix b, double c, SPAMatrix a);
 
 /**
+ * @brief Adds two matrices
+ *
+ * @param c sum of @p a and @p b
+ * @param a left matrix in sum
+ * @param b right matrix in sum
+ */
+extern void spa_mat_matrix_add(SPAMatrix c, SPAMatrix a, SPAMatrix b);
+
+/**
+ * @brief Subtracts two matrices
+ *
+ * @param c difference of @p a and @p b
+ * @param a left matrix in difference
+ * @param b right matrix in difference
+ */
+extern void spa_mat_matrix_sub(SPAMatrix c, SPAMatrix a, SPAMatrix b);
+
+/**
  * @brief Multiplies two matrices
  *
  * @details

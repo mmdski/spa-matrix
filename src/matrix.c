@@ -462,6 +462,44 @@ spa_mat_scalar_mult(SPAMatrix b, double c, SPAMatrix a) {
 }
 
 void
+spa_mat_matrix_add(SPAMatrix c, SPAMatrix a, SPAMatrix b) {
+
+  assert(a && b && c);
+  assert(a->n_rows == b->n_rows);
+  assert(a->n_cols == b->n_cols);
+  assert(a->n_rows == c->n_rows);
+  assert(a->n_cols == c->n_cols);
+
+  double sum;
+
+  for (size_t i = 1; i <= a->n_rows; ++i) {
+    for (size_t j = 1; j <= b->n_cols; ++j) {
+      sum = spa_mat_get(a, i, j) + spa_mat_get(b, i, j);
+      spa_mat_set(c, i, j, sum);
+    }
+  }
+}
+
+void
+spa_mat_matrix_sub(SPAMatrix c, SPAMatrix a, SPAMatrix b) {
+
+  assert(a && b && c);
+  assert(a->n_rows == b->n_rows);
+  assert(a->n_cols == b->n_cols);
+  assert(a->n_rows == c->n_rows);
+  assert(a->n_cols == c->n_cols);
+
+  double sum;
+
+  for (size_t i = 1; i <= a->n_rows; ++i) {
+    for (size_t j = 1; j <= b->n_cols; ++j) {
+      sum = spa_mat_get(a, i, j) - spa_mat_get(b, i, j);
+      spa_mat_set(c, i, j, sum);
+    }
+  }
+}
+
+void
 spa_mat_matrix_mult(SPAMatrix b, SPAMatrix a, SPAMatrix x) {
 
   assert(a && b && x);
