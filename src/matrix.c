@@ -202,6 +202,26 @@ spa_mat_colcat(SPAMatrix ab, SPAMatrix a, SPAMatrix b) {
   }
 }
 
+void
+spa_mat_rowcat(SPAMatrix ab, SPAMatrix a, SPAMatrix b) {
+
+  assert(ab && a && b);
+
+  assert(a->n_cols == b->n_cols);
+  assert(ab->n_cols == a->n_cols);
+  assert(ab->n_rows == (a->n_rows + b->n_rows));
+
+  for (size_t j = 1; j <= a->n_cols; ++j) {
+
+    for (size_t i = 1; i <= a->n_rows; ++i)
+      ab->elements[MAT_INDEX(a->n_cols, i, j)] = spa_mat_get(a, i, j);
+
+    for (size_t i = 1; i <= b->n_rows; ++i)
+      ab->elements[MAT_INDEX(b->n_cols, i + a->n_rows, j)] =
+          spa_mat_get(b, i, j);
+  }
+}
+
 bool
 spa_mat_eq(SPAMatrix a, SPAMatrix b) {
 

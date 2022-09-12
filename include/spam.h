@@ -187,6 +187,8 @@ extern void spa_mat_eye(SPAMatrix eye);
  */
 extern void spa_mat_colcat(SPAMatrix ab, SPAMatrix a, SPAMatrix b);
 
+extern void spa_mat_rowcat(SPAMatrix ab, SPAMatrix a, SPAMatrix b);
+
 /**
  * @brief Tests if two matrices are equal
  *
