@@ -505,6 +505,8 @@ extern void spa_gauss_free_col_nos(size_t *free_col_nos,
                                    size_t  n_free_cols,
                                    size_t *basic_col_nos);
 
+extern size_t spa_gauss_nonzero_row_nums(SPAMatrix u, size_t *nonzero_row_nums);
+
 /**
  * @brief Fills particular solution vectors in the columns of a matrix
  *

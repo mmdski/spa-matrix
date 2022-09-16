@@ -222,6 +222,27 @@ spa_gauss_free_col_nos(size_t *free_col_nos,
   }
 }
 
+size_t
+spa_gauss_nonzero_row_nums(SPAMatrix u, size_t *nonzero_row_nums) {
+
+  assert(u && nonzero_row_nums);
+
+  size_t n_nonzero_rows = 0;
+
+  size_t j;
+  for (size_t i = 1; i <= u->n_rows; ++i) {
+    for (j = 1; j <= u->n_cols; ++j) {
+      if (fabs(spa_mat_get(u, i, j)) > ZERO_EPS)
+        break;
+    }
+    if (j == u->n_cols) {
+      nonzero_row_nums[n_nonzero_rows++] = i;
+    }
+  }
+
+  return n_nonzero_rows;
+}
+
 void
 spa_gauss_part_solns(SPAMatrix part_solns,
                      SPAMatrix e_c,
