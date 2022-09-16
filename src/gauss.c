@@ -235,7 +235,7 @@ spa_gauss_nonzero_row_nos(SPAMatrix u, size_t *nonzero_row_nums) {
       if (fabs(spa_mat_get(u, i, j)) > ZERO_EPS)
         break;
     }
-    if (j == u->n_cols) {
+    if (j < u->n_cols) {
       nonzero_row_nums[n_nonzero_rows++] = i;
     }
   }
