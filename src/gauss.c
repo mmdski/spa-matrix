@@ -223,7 +223,7 @@ spa_gauss_free_col_nos(size_t *free_col_nos,
 }
 
 size_t
-spa_gauss_nonzero_row_nums(SPAMatrix u, size_t *nonzero_row_nums) {
+spa_gauss_nonzero_row_nos(SPAMatrix u, size_t *nonzero_row_nums) {
 
   assert(u && nonzero_row_nums);
 
