@@ -336,6 +336,8 @@ spa_mat_prow_exch_zero(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 extern void
 spa_mat_prow_exch_max(SPAMatrix a, size_t pivot_row, size_t pivot_col);
 
+extern void spa_mat_row_extract(SPAMatrix rows, SPAMatrix a, size_t *row_nos);
+
 /**
  * @brief Extracts columns from a matrix
  *
